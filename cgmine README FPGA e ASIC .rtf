@@ -1,0 +1,2123 @@
+{\rtf1\ansi\ansicpg1252\deff0\nouicompat{\fonttbl{\f0\fnil\fcharset0 Calibri;}}
+{\colortbl ;\red0\green0\blue255;}
+{\*\generator Riched20 6.3.9600}\viewkind4\uc1 
+\pard\sa200\sl276\slmult1\f0\fs22\lang22 Este \'e9 um multi-threaded multi-pool FPGA e ASIC mineiro para bitcoin.\par
+\par
+Este c\'f3digo \'e9 fornecido de forma totalmente gratuita pelo programador em\par
+Tempo para que as doa\'e7\'f5es sejam muito apreciadas. Por favor considere doar para o\par
+Endere\'e7o abaixo.\par
+gytta.marilove@gmail.com\par
+btc  1Bh1iY7MNZfeF8cp8UNf39jzueJ2bFE3Xo\par
+dash   XxDxiUdLqyFnPWn33LY5wcvRYnLJY5JP5o\par
+ether  0x1580f077a5eA5C72236eB38E2319702bB05FD189\par
+golem GNT  0x1580f077a5eA5C72236eB38E2319702bB05FD189\par
+LTC    LQwcCEZSB7HRSJQcTrwVUzXVdpawJMwfkM\par
+\par
+NOTA: Este c\'f3digo est\'e1 licenciado sob a GPLv3. Isso significa que a fonte para qualquer\par
+As modifica\'e7\'f5es que voc\'ea fizer a este c\'f3digo DEVEM ser fornecidas por lei se voc\'ea distribuir\par
+Bin\'e1rios modificados. Consulte COPYING para obter detalhes.\par
+\par
+\par
+TRANSFER\'caNCIAS:\par
+\par
+{{\field{\*\fldinst{HYPERLINK Http://ck.kolivas.org/apps/cgminer }}{\fldrslt{Http://ck.kolivas.org/apps/cgminer\ul0\cf0}}}}\f0\fs22\par
+\par
+\'c1RVORE DE GIT:\par
+\par
+{{\field{\*\fldinst{HYPERLINK Https://github.com/ckolivas/cgminer }}{\fldrslt{Https://github.com/ckolivas/cgminer\ul0\cf0}}}}\f0\fs22\par
+\par
+Fio de suporte:\par
+\par
+{{\field{\*\fldinst{HYPERLINK Http://bitcointalk.org/index.php?topic=28402.0 }}{\fldrslt{Http://bitcointalk.org/index.php?topic=28402.0\ul0\cf0}}}}\f0\fs22\par
+\par
+Canal IRC:\par
+\par
+Irc: //irc.freenode.net/cgminer\par
+\par
+VEJA TAMB\'c9M API-README, ASIC-README e FGPA-README PARA MAIS INFORMA\'c7\'d5ES EM CADA UM.\par
+\par
+---\par
+\par
+RESUMO EXECUTIVO SOBRE O USO:\par
+\par
+Piscina individual:\par
+\par
+Cgminer -o http: // pool: porta -u nome de usu\'e1rio -p senha\par
+\par
+V\'e1rias piscinas:\par
+\par
+Cgminer -o http: // pool1: porta -u pool1username -p pool1password -o http: // pool2: porta -u pool2usernmae -p pool2password\par
+\par
+Pool \'fanico com um proxy http padr\'e3o:\par
+\par
+Cgminer -o "<{{\field{\*\fldinst{HYPERLINK "http: proxy: porta | http: // pool: porta"}}{\fldrslt{http: proxy: porta | http: // pool: porta\ul0\cf0}}}}\f0\fs22 >" -u nome de usu\'e1rio -p senha\par
+\par
+\'danico pool com um proxy socks5:\par
+\par
+Cgminer -o "socks5: proxy: port | http: // pool: port" -u username -p senha\par
+\par
+\'danico pool com apoio de protocolo stratum:\par
+\par
+Cgminer -o stratum + tcp: // pool: porta -u nome de usu\'e1rio -p senha\par
+\par
+Solo minera\'e7\'e3o para bitcoind local:\par
+\par
+Cgminer -o http: // localhost: 8332 -u username -p senha --btc-address 1Bh1iY7MNZfeF8cp8UNf39jzueJ2bFE3Xo\par
+A lista de tipos de proxy s\'e3o:\par
+ Http: padr\'e3o http 1.1 proxy\par
+ Http0: proxy http 1.0\par
+ Socks4: socks4 proxy\par
+ Socks5: socks5 proxy\par
+ Socks4a: proxy socks4a\par
+ Socks5h: socks5 proxy usando um nome de host\par
+\par
+Se voc\'ea compilar cgminer com uma vers\'e3o de CURL antes de 7.19.4, ent\'e3o alguns dos acima ser\'e3o\par
+N\'e3o estar dispon\'edvel. Todos est\'e3o dispon\'edveis desde CURL vers\'e3o 7.19.4\par
+\par
+Se voc\'ea especificar a op\'e7\'e3o --socks-proxy para cgminer, ela s\'f3 ser\'e1 aplicada a todas as pools\par
+Que n\'e3o especificam sua pr\'f3pria configura\'e7\'e3o de proxy como acima\par
+\par
+\par
+Depois de salvar a configura\'e7\'e3o do menu, voc\'ea n\'e3o precisa dar ao cgminer\par
+Argumentos e ele carregar\'e1 sua configura\'e7\'e3o.\par
+\par
+Qualquer arquivo de configura\'e7\'e3o tamb\'e9m pode conter\par
+\tab "Include": "filename"\par
+Para incluir recursivamente outro arquivo de configura\'e7\'e3o.\par
+Escrever a configura\'e7\'e3o ir\'e1 guardar todas as defini\'e7\'f5es de todos os ficheiros na sa\'edda.\par
+\par
+\par
+---\par
+CONSTRUINDO CGMINER PARA SI MESMO\par
+\par
+DEPEND\'caNCIAS:\par
+Obrigat\'f3rio:\par
+\tab Pkg-config {{\field{\*\fldinst{HYPERLINK http://www.freedesktop.org/wiki/Software/pkg-config }}{\fldrslt{http://www.freedesktop.org/wiki/Software/pkg-config\ul0\cf0}}}}\f0\fs22\par
+\tab Libtool {{\field{\*\fldinst{HYPERLINK http://www.gnu.org/software/libtool/ }}{\fldrslt{http://www.gnu.org/software/libtool/\ul0\cf0}}}}\f0\fs22\par
+Opcional:\par
+\tab Curl dev library {{\field{\*\fldinst{HYPERLINK http://curl.haxx.se/libcurl/ }}{\fldrslt{http://curl.haxx.se/libcurl/\ul0\cf0}}}}\f0\fs22\par
+\tab (Libcurl4-openssl-dev - Deve dizer configurar --disable-libcurl caso contr\'e1rio\par
+\tab Ele tentar\'e1 compil\'e1-lo em)\par
+\par
+\tab Curses dev library\par
+\tab (Libncurses5-dev ou libpdcurses no WIN32 para interface de usu\'e1rio de texto)\par
+\par
+\tab Libudev dev library (libudev-dev)\par
+\tab (Isto s\'f3 \'e9 necess\'e1rio para suporte a dispositivos USB e \'e9 apenas para Linux)\par
+\par
+Se a constru\'e7\'e3o de git:\par
+\tab Autoconf\par
+\tab Automake\par
+\par
+Se construir em Red Hat:\par
+        Sudo yum install autoconf automake autorconf libtool openssl-compat-bitcoin-devel.x86_64 \\\par
+                         Curl libcurl libcurl-devel openssh\par
+\par
+Se construir no Ubuntu:\par
+\tab Sudo apt-get install compila\'e7\'e3o-essencial autoconf automake libtool pkg-config \\\par
+                             Libcurl3-dev libudev-dev\par
+\par
+Op\'e7\'f5es de configura\'e7\'e3o espec\'edficas do CGMiner:\par
+  --enable-ants1 Compilar o suporte para Antminer S1 Bitmain (padr\'e3o\par
+                          Desativado)\par
+  --enable-ants2 Compilar o suporte para Antminer S2 Bitmain (padr\'e3o\par
+                          Desativado)\par
+  --enable-avalon Compilar o suporte para Avalon (padr\'e3o desativado)\par
+  --enable-avalon2 Compilar o suporte para Avalon2 (padr\'e3o desativado)\par
+  --enable-avalon4 Compilar o suporte para Avalon4 (padr\'e3o desativado)\par
+  --enable-bab Compilar o suporte para BlackArrow Bitfury (padr\'e3o\par
+                          Desativado)\par
+  --enable-bflsc Compilar o suporte para ASICs BFL (padr\'e3o desabilitado)\par
+  --enable-bitforce Compilar o suporte para FPGAs BitForce (padr\'e3o\par
+                          Desativado)\par
+  --enable-bitfury Compilar o suporte para ASICs BitFury (padr\'e3o desativado)\par
+  --enable-bitmine_A1 Compilar o suporte para ASICs Bitmine.ch A1 (padr\'e3o\par
+                          Desativado)\par
+  --enable-blockerupter Compilar o suporte para ASICMINER BlockErupter Tube / Prisma\par
+  \tab\tab\tab   (Padr\'e3o desabilitado)\par
+  --enable-cointerra Compilar o suporte para ASICs Cointerra (padr\'e3o desativado)\par
+  --enable-drillbit Compilar o suporte para ASICs BitFury do Drillbit (padr\'e3o\par
+                          Desativado)\par
+  --enable-hashfast Compilar o suporte para Hashfast (padr\'e3o desativado)\par
+  --enable-icarus Compilar o suporte para Icarus (padr\'e3o desativado)\par
+  --enable-klondike Compilar o suporte para Klondike (padr\'e3o desativado)\par
+  --enable-knc Compilar o suporte para mineiros KnC (padr\'e3o desativado)\par
+  --enable-minion Compilar o suporte para o Minion BlackArrow ASIC (padr\'e3o\par
+                          Desativado)\par
+  --enable-modminer Compilar o suporte para FPGAs ModMiner (padr\'e3o desativado)\par
+  --enable-sp10 Compilar o suporte para Spondoolies SP10 (padr\'e3o\par
+                          Desativado)\par
+  --enable-sp30 Compile o suporte para Spondoolies SP30 (padr\'e3o\par
+                          Desativado)\par
+  --disable-libcurl Desativar constru\'e7\'e3o com libcurl para getwork e GBT\par
+                          Apoio, suporte\par
+  --enable-libsystemd Compilar o suporte para o watchdog do sistema eo status\par
+                          Notifica\'e7\'f5es (padr\'e3o desativado)\par
+  --with-curses Compile o suporte para curses TUI (padr\'e3o ativado)\par
+  --with-system-libusb Compilar contra o sistema din\'e2mico libusb (uso padr\'e3o\par
+                          Inclu\'eddo libusb est\'e1tico)\par
+  --with-system-jansson Compilar contra o sistema din\'e2mico jansson (uso padr\'e3o\par
+                          Jansson est\'e1tico inclu\'eddo)\par
+\par
+Basic * nix instru\'e7\'f5es de compila\'e7\'e3o:\par
+\tab Para realmente construir:\par
+\par
+\tab ./autogen.sh # s\'f3 \'e9 necess\'e1rio se a constru\'e7\'e3o de git repo\par
+\tab CFLAGS = "- O2 -Wall -march = nativo" ./configure <options>\par
+\tab fa\'e7o\par
+\par
+\tab Nenhuma instala\'e7\'e3o \'e9 necess\'e1ria. Voc\'ea pode executar cgminer a partir da compila\'e7\'e3o\par
+\tab Diretamente, mas voc\'ea pode fazer make install se voc\'ea deseja instalar\par
+\tab Cgminer para um local ou local do sistema especificado.\par
+\par
+Constru\'e7\'e3o de janelas:\par
+\par
+Na verdade, \'e9 mais f\'e1cil criar um bin\'e1rio do Windows usando ferramentas de compila\'e7\'e3o cruzadas\par
+Fornecido pelo "mxe" dispon\'edvel em {{\field{\*\fldinst{HYPERLINK http://mxe.cc/ }}{\fldrslt{http://mxe.cc/\ul0\cf0}}}}\f0\fs22  (use o 32 bit um!)\par
+Depois de seguir as instru\'e7\'f5es para a constru\'e7\'e3o do mxe:\par
+\tab Export PATH = (caminho / para / mxe) / usr / bin /: $ PATH\par
+\tab CFLAGS = "- O2 -Wall -W -march = i686" ./configure --host = i686-pc-mingw32 <op\'e7\'f5es>\par
+\tab fa\'e7o\par
+\par
+Instru\'e7\'f5es de compila\'e7\'e3o Native WIN32: consulte windows-build.txt, mas essas instru\'e7\'f5es\par
+Est\'e3o agora irremediavelmente desatualizados.\par
+\par
+---\par
+\par
+Instru\'e7\'f5es de uso: Execute "cgminer --help" para ver as op\'e7\'f5es:\par
+\par
+Uso: cgminer [-DdElmpPQqUsTouOchnV]\par
+\par
+Op\'e7\'f5es para o arquivo de configura\'e7\'e3o e linha de comando:\par
+--anu-freq <arg> Definir frequ\'eancia AntminerU1 / 2 em MHz, intervalo 125-500 (predefini\'e7\'e3o: 250.0)\par
+--api-allow <arg> Permitir acesso \'e0 API somente \'e0 lista de endere\'e7os [G:] IP [/ Prefix] [/ subnets]\par
+--api-description <arg> Descri\'e7\'e3o colocada no cabe\'e7alho do status da API, padr\'e3o: vers\'e3o cgminer\par
+--api-groups <arg> API uma letra grupos G: cmd: cmd [, P: cmd: * ...] definindo os cmds que um grupo pode usar\par
+--api-listen Ativar API, padr\'e3o: desativado\par
+--api-mcast Ativar ouvinte de multicast da API, padr\'e3o: desabilitado\par
+--api-mcast-addr <arg> API Multicast ouvir o endere\'e7o\par
+--api-mcast-code <arg> C\'f3digo esperado na mensagem API Multicast, n\'e3o use '-'\par
+--api-mcast-des <arg> Descri\'e7\'e3o anexada \'e0 resposta de Multicast da API, padr\'e3o: ''\par
+--api-mcast-port <arg> Porta de escuta de multicast da API (padr\'e3o: 4028)\par
+--api-network Permitir API (se habilitado) para ouvir em / para qualquer endere\'e7o, padr\'e3o: somente 127.0.0.1\par
+--api-port <arg> N\'famero da porta do minerador API (padr\'e3o: 4028)\par
+--au3-freq <arg> Definir a frequ\'eancia AntminerU3 em MHz, intervalo 100-250 (predefini\'e7\'e3o: 225.0)\par
+--au3-volt <arg> Definir a tens\'e3o AntminerU3 em mv, intervalo 725-850, 0 para n\'e3o ser definido (padr\'e3o: 775)\par
+--avalon-auto Ajusta din\'e2micamente a frequ\'eancia de overclock avalon para melhor hashrate\par
+--avalon-cutoff <arg> Definir a temperatura de corte do sobreaquecimento avalon (padr\'e3o: 60)\par
+--avalon-fan <arg> Definir a porcentagem de velocidade de ventilador para avalon, valor \'fanico ou intervalo (padr\'e3o: 20-100)\par
+--avalon-freq <arg> Definir faixa de freq\'fc\'eancia para avalon-auto, valor \'fanico ou intervalo\par
+--avalon-options <arg> Definir op\'e7\'f5es avalon baud: miners: asic: timeout: freq: tech\par
+--avalon-temp <arg> Definir a temperatura alvo avalon (padr\'e3o: 50)\par
+--avalon2-freq Faixa de freq\'fc\'eancia ajustada para Avalon2, valor simples ou alcance\par
+--valon2-voltage Set Tens\'e3o do n\'facleo Avalon2, em milivolts\par
+--avalon2-fan Set Avalon2 velocidade do ventilador alvo\par
+--avalon2-cutoff <arg> Definir a temperatura de corte de sobreaquecimento do Avalon2 (padr\'e3o: 88)\par
+--valon2-fixed-speed Definir o ventilador Avalon2 para velocidade fixa\par
+--avalon4-automatic-voltage Ajuste autom\'e1tico da base de tens\'e3o no m\'f3dulo DH\par
+--valon4-voltage Set Tens\'e3o do n\'facleo Avalon4, em milivolts, passo: 125\par
+--avalon4-freq Definir a frequ\'eancia para Avalon4, 1 a 3 valores, exemplo: 445: 385: 370\par
+--valon4-fan Set Velocidade de velocidade do ventilador Avalon4\par
+--avalon4-temp <arg> Definir a temperatura alvo Avalon4 (padr\'e3o: 42)\par
+--avalon4-cutoff <arg> Definir a temperatura de corte de sobreaquecimento Avalon4 (padr\'e3o: 65)\par
+--avalon4-polling-delay <arg> Definir valor de atraso de polling Avalon4 (ms) (padr\'e3o: 20)\par
+--avalon4-ntime-offset <arg> Definir Avalon4 MM ntime rolling max offset (padr\'e3o: 4)\par
+--avalon4-aucspeed <arg> Definir Avalon4 AUC IIC velocidade do barramento (padr\'e3o: 400000)\par
+--avalon4-aucxdelay <arg> Definir Avalon4 AUC IIC xfer atraso de leitura, 4800 ~ = 1ms (padr\'e3o: 9600)\par
+--bab-options <arg> Definir BaB op\'e7\'f5es max: def: min: up: para baixo: hz: delay: trf\par
+--balance Alterar a estrat\'e9gia multipolar de failover para equilibrar mesmo partes\par
+--benchfile <arg> Executar cgminer no modo benchmark usando um arquivo de trabalho - n\'e3o produz compartilhamentos\par
+--benchfile-display Exibe cada banco n\'e3o encontrado\par
+--benchmark Executar cgminer no modo benchmark - n\'e3o produz a\'e7\'f5es\par
+--bet-clk <arg> Definir velocidade do rel\'f3gio de ASICMINER Tubo / Prisma para (arg + 1) * 10MHz (padr\'e3o: 23)\par
+--bfl-range Utilize intervalo nonce em dispositivos bitforce se suportado\par
+--bflsc-overheat <arg> Definir a temperatura de sobreaquecimento onde os dispositivos BFLSC s\'e3o regulados, 0 para desativar (padr\'e3o: 85)\par
+--bitburner-fury-voltage <arg> Definir BitBurner Fury tens\'e3o do n\'facleo, em milivolts\par
+--bitburner-fury-options <arg> Substituir avalon-options para BitBurner Fury board baud: miners: asic: timeout: freq\par
+--bitburner-voltage <arg> Definir a voltagem do BitBurner (Avalon), em milivolts\par
+--bitmain-auto Ajusta dinamicamente a freq\'fc\'eancia overclock de bitmain para melhor hashrate\par
+--bitmain-cutoff <arg> Definir temperatura de corte do superaquecimento do bitmain\par
+--bitmain-fan <arg> Define a porcentagem de velocidade do ventilador para bitmain, valor \'fanico ou intervalo (padr\'e3o: 20-100)\par
+--bitmain-freq <arg> Definir bitmain freq op\'e7\'f5es timeout: freq: regdata\par
+--bitmain-hwerror Definir bitmain dispositivo detectar erro de hardware\par
+--bitmain-options <arg> Definir bitmain op\'e7\'f5es baud: miners: asic: timeout: freq: regdata\par
+--bitmain-temp <arg> Definir a temperatura alvo de bitmain\par
+--bitmain-workdelay <arg> Definir bitmain atraso de trabalho (ms) 0-100\par
+--bitmain-voltage <arg> Ajustar a tens\'e3o de bitmain - apenas S2 / S3\par
+--bitmain-dev <arg> Definir dispositivo de bitmain - Somente S2\par
+--bitmainbeeper Define o sinal sonoro de bitmain tocando\par
+--bitmaintempoverctrl Definir bitmain parar runing quando temprerature \'e9 mais de 80 graus Celsius\par
+--bxf-bits <arg> Definir bits max BXF / HXF para overclocking (padr\'e3o: 54)\par
+--bxf-temp-target <arg> Definir a temperatura alvo para dispositivos BXF / HXF (padr\'e3o: 82)\par
+--bxm-bits <arg> Definir bits BXM para overclocking (padr\'e3o: 54)\par
+--btc-address <arg> Definir bitcoin destino endere\'e7o quando solo minera\'e7\'e3o para bitcoind\par
+--btc-sig <arg> Definir assinatura para adicionar ao coinbase quando minera\'e7\'e3o solo (opcional)\par
+--compact Usar display compacto sem estat\'edsticas por dispositivo\par
+--debug | -D Ativar sa\'edda de depura\'e7\'e3o\par
+--disable-rejecting Automaticamente desabilitar pools que continuamente rejeitam compartilhamentos\par
+--drillbit-options <arg> Definir op\'e7\'f5es de drillbit <int> ext>: clock [: clock_divider] [: voltage]\par
+--expiry | -E <arg> Limite superior em quantos segundos depois de come\'e7ar o trabalho n\'f3s consideramos uma parte dela obsoleto (padr\'e3o: 120)\par
+--failover-only N\'e3o vazamento de trabalho para pools de backup quando o pool prim\'e1rio est\'e1 atrasado\par
+--fix-protocol N\'e3o redirecionar para um protocolo de rede diferente (por exemplo, stratum)\par
+--hfa-hash-clock <arg> Definir velocidade de rel\'f3gio hashfast (padr\'e3o: 550)\par
+--hfa-fail-drop <arg> Defina quantos MHz para desativar a velocidade do clock em cada falha em um dispositivo hashfast overlocked (padr\'e3o: 10)\par
+--hfa-fan <arg> Definir a porcentagem de velocidade do ventilador para hashfast, valor \'fanico ou intervalo (padr\'e3o: 10-85)\par
+--hfa-name <arg> Definir um nome exclusivo para um \'fanico dispositivo hashfast especificado com --usb ou o primeiro dispositivo encontrado\par
+--hfa-noshed Desabilitar o recurso de desativa\'e7\'e3o do n\'facleo din\'e2mico hashfast\par
+--hfa-options <arg> Definir hashfast op\'e7\'f5es nome: clock (separado por v\'edrgula)\par
+--hfa-temp-overheat <arg> Definir a temperatura de sobreaquecimento de sobrecarga do hashfast (padr\'e3o: 95)\par
+--hfa-temp-target <arg> Define a temperatura alvo hashfast (0 para desativar) (padr\'e3o: 88)\par
+--hro-freq Define a freq\'fc\'eancia de clock de hashratio (padr\'e3o: 280)\par
+--hotplug <arg> Segundos entre verifica\'e7\'f5es hotplug (0 significa nunca verificar)\par
+--klondike-options <arg> Definir as op\'e7\'f5es do klondike clock: temptarget\par
+--load-balance Muda a estrat\'e9gia multipolar do failover para o balan\'e7o baseado em cotas\par
+--log | -l <arg> Intervalo em segundos entre a sa\'edda do log (padr\'e3o: 5)\par
+--lowmem Minimizar cache de compartilhamentos para aplicativos de mem\'f3ria baixa\par
+--minion-chipreport <arg> Segundos para relat\'f3rio de chip 5min hashrate, intervalo 0-100 (padr\'e3o: 0 = desativado)\par
+--minion-freq <arg> Definir frequ\'eancias de minion chip em MHz, um \'fanico valor ou lista de v\'edrgulas, intervalo 100-1400 (padr\'e3o: 1200)\par
+--minion-freqchange Tempo total de milissegundos para fazer altera\'e7\'f5es de freq\'fc\'eancia (padr\'e3o: 1000)\par
+--minion-freqpercent Porcentagem a ser usada ao iniciar um chip (padr\'e3o: 70%)\par
+--minion-idlecount Relata quando IdleCount \'e9> 0 ou altera\par
+--minion-ledcount Desligar led quando mais de muitos chips abaixo do ledlimit (padr\'e3o: 0)\par
+--minion-ledlimit Desligar led quando chips GHs est\'e3o abaixo desta (padr\'e3o: 90)\par
+--minion-noautofreq Desactivar o ajuste autom\'e1tico de frequ\'eancia\par
+--minion-overheat Habilita a parada direta de qualquer chip quando o status excede 100C\par
+--minion-spidelay Adicione um atraso em microsegundos ap\'f3s cada SPI I / O\par
+--minion-spireset SPI reset regular: iNNN para contagem de E / S ou sNNN para segundos - 0 significa nenhum\par
+--minion-spisleep Tempo de suspens\'e3o em milissegundos ao fazer uma redefini\'e7\'e3o SPI\par
+--minion-temp <arg> Definir limiar de temperatura do chip minion, valor \'fanico ou lista de v\'edrgulas, intervalo 120-160 (padr\'e3o: 135C)\par
+--monitor | -m <arg> Use o cmd personalizado para as mensagens de sa\'edda\par
+--nfu-bits <arg> Definir nanofury bits para overclocking, intervalo 32-63 (padr\'e3o: 50)\par
+--net-delay Impose pequenos atrasos na rede para n\'e3o sobrecarregar os roteadores lentos\par
+--no-submit-stale N\'e3o envie as a\'e7\'f5es se forem detectadas como obsoletas\par
+--osm-led-mode <arg> Definir o modo de LED para os dispositivos OneStringMiner (padr\'e3o: 4)\par
+--pass | -p <arg> Senha do servidor bitcoin JSON-RPC\par
+--per-device-stats For\'e7a o modo detalhado e as estat\'edsticas de sa\'edda por dispositivo\par
+--protocol-dump | -P Lixeira detalhada de atividades de n\'edvel de protocolo\par
+-Q <arg> N\'famero m\'ednimo de itens de trabalho a serem enfileirados (0+) (padr\'e3o: 1)\par
+--quiet | -q Desabilitar sa\'edda de log, status de exibi\'e7\'e3o e erros\par
+--quota | -U <arg> quota; combina\'e7\'e3o de URL para servidor com cotas de estrat\'e9gia de balanceamento de carga\par
+--real-quiet Desativa toda a sa\'edda\par
+--rock-freq <arg> Definir a frequ\'eancia RockMiner em MHz, faixa 200-400 (padr\'e3o: 270)\par
+--rotate <arg> Alterar a estrat\'e9gia de multipool de failover para rodar regularmente em N minutos (padr\'e3o: 0)\par
+--round-robin Alterar a estrat\'e9gia multipool de failover para round robin em caso de falha\par
+--scan-time | -s <arg> Limite superior no tempo gasto para digitalizar o trabalho atual, em segundos (padr\'e3o: -1)\par
+--sched-start <arg> Definir uma hora do dia em HH: MM para iniciar a minera\'e7\'e3o (uma vez off sem um tempo de parada)\par
+--sched-stop <arg> Defina uma hora do dia em HH: MM para parar a minera\'e7\'e3o (ser\'e1 encerrado sem uma hora de in\'edcio)\par
+--sharelog <arg> Acrescentar log de compartilhamento ao arquivo\par
+--shares <arg> Sa\'edda ap\'f3s a minera\'e7\'e3o N partes (padr\'e3o: ilimitado)\par
+--socks-proxy <arg> Definir proxy socks4 (host: porta)\par
+--suggest-diff <arg> Sugerir dificuldade mineira para o pool para o usu\'e1rio (padr\'e3o: nenhum)\par
+--syslog Utilizar log do sistema para mensagens de sa\'edda (padr\'e3o: erro padr\'e3o)\par
+--temp-cutoff <arg> Temperatura em que um dispositivo ser\'e1 automaticamente desabilitado, um valor ou uma lista separada por v\'edrgulas (padr\'e3o: 95)\par
+--text-only | -T Desabilita a sa\'edda de tela formatada ncurses\par
+--url | -o <arg> URL para o servidor bitcoin JSON-RPC\par
+--usb <arg> Sele\'e7\'e3o de dispositivo USB\par
+--user | -u <arg> Nome de usu\'e1rio do servidor bitcoin JSON-RPC\par
+--userpass | -O <arg> Usu\'e1rio: Par de senha para bitcoin servidor JSON-RPC\par
+--verbose Regista a sa\'edda verbosa para stderr, bem como a sa\'edda de estado\par
+--widescreen Usar display extra grande sem alternar\par
+--worktime Exibir tempo de trabalho extra informa\'e7\'f5es de depura\'e7\'e3o\par
+Op\'e7\'f5es para linha de comando somente:\par
+--config | -c <arg> Carregar um arquivo de configura\'e7\'e3o em formato JSON\par
+Consulte example.conf para obter uma configura\'e7\'e3o de exemplo.\par
+--default-config <arg> Especifique o nome do arquivo de configura\'e7\'e3o padr\'e3o\par
+Carregado no in\'edcio e usado ao salvar sem um nome.\par
+--help | -h Imprimir esta mensagem\par
+--ndevs | -n Exibe todos os dispositivos USB e saia\par
+--version | -V Exibir vers\'e3o e sair\par
+\par
+\par
+Dispositivo USB silencioso (ASIC e FPGA):\par
+\par
+--icarus-options <arg> Definir configura\'e7\'f5es de placa FPGA espec\'edficas - um conjunto de valores para todos ou separados por v\'edrgula\par
+--icarus-timing <arg> Defina como o tempo de Icarus \'e9 calculado - uma configura\'e7\'e3o / valor para todos ou separados por v\'edrgula\par
+--usb-dump (Consulte FPGA-README)\par
+\par
+Consulte FGPA-README ou ASIC-README para obter mais informa\'e7\'f5es sobre estes.\par
+\par
+\par
+ASIC apenas op\'e7\'f5es:\par
+\par
+--anu-freq <arg> Definir frequ\'eancia AntminerU1 / 2 em MHz, intervalo 125-500 (predefini\'e7\'e3o: 250.0)\par
+--au3-freq <arg> Definir a frequ\'eancia AntminerU3 em MHz, intervalo 100-250 (predefini\'e7\'e3o: 225.0)\par
+--au3-volt <arg> Ajustar a tens\'e3o AntminerU3 em mv, intervalo 725-850, 0 para n\'e3o ser ajustado (padr\'e3o: 750)\par
+--avalon-auto Ajusta din\'e2micamente a frequ\'eancia de overclock avalon para melhor hashrate\par
+--avalon-cutoff <arg> Definir a temperatura de corte do sobreaquecimento avalon (padr\'e3o: 60)\par
+--avalon-fan <arg> Definir a porcentagem de velocidade de ventilador para avalon, valor \'fanico ou intervalo (padr\'e3o: 20-100)\par
+--avalon-freq <arg> Definir faixa de freq\'fc\'eancia para avalon-auto, valor \'fanico ou intervalo\par
+--avalon-options <arg> Definir op\'e7\'f5es avalon baud: miners: asic: timeout: freq: tech\par
+--avalon-temp <arg> Definir a temperatura alvo avalon (padr\'e3o: 50)\par
+--avalon2-freq Faixa de freq\'fc\'eancia ajustada para Avalon2, valor simples ou alcance\par
+--valon2-voltage Set Tens\'e3o do n\'facleo Avalon2, em milivolts\par
+--avalon2-fan Set Avalon2 velocidade do ventilador alvo\par
+--avalon2-cutoff <arg> Definir a temperatura de corte de sobreaquecimento do Avalon2 (padr\'e3o: 88)\par
+--valon2-fixed-speed Definir o ventilador Avalon2 para velocidade fixa\par
+--avalon4-automatic-voltage Ajuste autom\'e1tico da base de tens\'e3o no m\'f3dulo DH\par
+--valon4-voltage Set Tens\'e3o do n\'facleo Avalon4, em milivolts, passo: 125\par
+--avalon4-freq Definir a frequ\'eancia para Avalon4, 1 a 3 valores, exemplo: 445: 385: 370\par
+--valon4-fan Set Velocidade de velocidade do ventilador Avalon4\par
+--avalon4-temp <arg> Definir a temperatura alvo Avalon4 (padr\'e3o: 42)\par
+--avalon4-cutoff <arg> Definir a temperatura de corte de sobreaquecimento Avalon4 (padr\'e3o: 65)\par
+--avalon4-polling-delay <arg> Definir valor de atraso de polling Avalon4 (ms) (padr\'e3o: 20)\par
+--avalon4-ntime-offset <arg> Definir Avalon4 MM ntime rolling max offset (padr\'e3o: 4)\par
+--avalon4-aucspeed <arg> Definir Avalon4 AUC IIC velocidade do barramento (padr\'e3o: 400000)\par
+--avalon4-aucxdelay <arg> Definir Avalon4 AUC IIC xfer atraso de leitura, 4800 ~ = 1ms (padr\'e3o: 9600)\par
+--bab-options <arg> Definir BaB op\'e7\'f5es max: def: min: up: para baixo: hz: delay: trf\par
+--bflsc-overheat <arg> Definir a temperatura de sobreaquecimento onde os dispositivos BFLSC s\'e3o regulados, 0 para desativar (padr\'e3o: 90)\par
+--bitburner-fury-options <arg> Substituir avalon-options para BitBurner Fury board baud: miners: asic: timeout: freq\par
+--bitburner-fury-voltage <arg> Definir BitBurner Fury tens\'e3o do n\'facleo, em milivolts\par
+--bitburner-voltage <arg> Definir a voltagem do BitBurner (Avalon), em milivolts\par
+--bitmine-a1-options <ref_clk>: <sys_clk>: <spi_clk>: <max_chip>\par
+--bxf-temp-target <arg> Definir a temperatura alvo para dispositivos BXF (padr\'e3o: 82)\par
+--bxm-bits <arg> Definir bits BXM para overclocking (padr\'e3o: 50)\par
+--hfa-hash-clock <arg> Definir velocidade de rel\'f3gio hashfast (padr\'e3o: 550)\par
+--hfa-fail-drop <arg> Defina quantos MHz para desativar a velocidade do clock em cada falha em um dispositivo hashfast overlocked (padr\'e3o: 10)\par
+--hfa-fan <arg> Definir a porcentagem de velocidade do ventilador para hashfast, valor \'fanico ou intervalo (padr\'e3o: 10-85)\par
+--hfa-name <arg> Definir um nome exclusivo para um \'fanico dispositivo hashfast especificado com --usb ou o primeiro dispositivo encontrado\par
+--hfa-noshed Desabilitar o recurso de desativa\'e7\'e3o do n\'facleo din\'e2mico hashfast\par
+--hfa-temp-overheat <arg> Definir a temperatura de sobreaquecimento de sobrecarga do hashfast (padr\'e3o: 95)\par
+--hfa-temp-target <arg> Define a temperatura alvo hashfast (0 para desativar) (padr\'e3o: 88)\par
+--hro-freq Define a freq\'fc\'eancia de clock de hashratio (padr\'e3o: 280)\par
+--klondike-options <arg> Definir as op\'e7\'f5es do klondike clock: temptarget\par
+--rock-freq <arg> Definir a frequ\'eancia RockMiner em MHz, faixa 125-500 (padr\'e3o: 270)\par
+\par
+FPGA apenas op\'e7\'f5es:\par
+Consulte ASIC-README para obter mais informa\'e7\'f5es sobre estes.\par
+\par
+\par
+\par
+--bfl-range Utilize intervalo nonce em dispositivos bitforce se suportado\par
+\par
+Consulte FGPA-README para obter mais informa\'e7\'f5es sobre isso.\par
+\par
+\par
+Cgminer deve encontrar automaticamente todos os seus Avalon ASIC, BFL ASIC, BitForce\par
+FPGAs, Icarus bitstream FPGAs, Klondike ASIC, ASICMINER bloco usb erup\'e7\'f5es,\par
+ASICs KnC, ASICs BaB, ASICs Hashfast, FPGAs ModMiner, BPMC / BGMC USB ASICs BF1,\par
+Bi * fury USB ASICs, Onestring mineiro USB ASICs, Hexfury USB ASICs, Nanofury USB\par
+ASICs, ASICs USB U2 / U2 / U2 + U3 USB, dispositivos Cointerra, ASICs USB BFx2,\par
+Rockmicro R-Box / RK-Box / USB ASICs T1, Avalon2 / 3/4 USB ASICs e Hashratio USB\par
+ASICs.\par
+\par
+---\par
+\par
+CONFIGURA\'c7\'c3O DE DISPOSITIVOS USB\par
+\par
+JANELAS:\par
+\par
+No Windows, o suporte USB direto requer a instala\'e7\'e3o de um WinUSB\par
+Driver (N\'c3O o driver ftdi_sio) e anexe-o ao dispositivo USB escolhido.\par
+Ao configurar seu dispositivo, conecte-o e aguarde o Windows tentar\par
+Instalar um driver por conta pr\'f3pria. Ele pode pensar que ele teve sucesso ou falhou, mas esperar\par
+Para que ele termine, independentemente. Este n\'e3o \'e9 o driver que voc\'ea deseja instalar. Neste\par
+Ponto voc\'ea precisa associar seu dispositivo com o driver WinUSB. O mais f\'e1cil\par
+Maneira de fazer isso \'e9 usar o utilit\'e1rio zadig que voc\'ea deve clicar com o bot\'e3o direito do mouse e\par
+executar como administrador. Depois de ligar o dispositivo, pode escolher o\par
+"Listar todos os dispositivos" a partir do menu "op\'e7\'e3o" e voc\'ea deve ser capaz de ver o\par
+Dispositivo como algo como: "BitFORCE SHA256 SC". Escolha a instala\'e7\'e3o ou substitua\par
+Driver e selecione WinUSB. Voc\'ea pode usar o google para zadig ou fazer o download\par
+A partir do diret\'f3rio cgminer no link DOWNLOADS acima.\par
+\par
+Quando voc\'ea primeiro alternar um dispositivo para WinUSB com zadig e ele mostra que\par
+Corretamente no lado esquerdo da janela zadig, mas ainda d\'e1 permiss\'e3o\par
+Erros, talvez seja necess\'e1rio desconectar o USB mineiro e, em seguida,\par
+Os usu\'e1rios podem precisar reiniciar neste momento.\par
+\par
+\par
+LINUX:\par
+\par
+A vers\'e3o curta:\par
+\par
+ Sudo cp 01-cgminer.rules /etc/udev/rules.d/\par
+\par
+\par
+A vers\'e3o longa:\par
+\par
+No linux, o suporte USB direto n\'e3o requer nenhum driver. No entanto, devido a\par
+Problemas de permiss\'f5es, talvez voc\'ea n\'e3o consiga ministrar diretamente nos dispositivos\par
+Usu\'e1rio regular sem dar ao usu\'e1rio acesso ao dispositivo ou minerando como\par
+Root (administrador). Para dar acesso regular ao usu\'e1rio, voc\'ea pode fazer\par
+Ele um membro do grupo plugdev com os seguintes comandos:\par
+\par
+ Sudo usermod -G plugdev -a `whoami`\par
+\par
+Se sua distribui\'e7\'e3o n\'e3o tiver o grupo plugdev, voc\'ea pode cri\'e1-lo com:\par
+\par
+ Sudo groupadd plugdev\par
+\par
+Para que os dispositivos USB sejam imediatamente propriedade do grupo plugdev e\par
+Acess\'edvel por qualquer pessoa do grupo plugdev voc\'ea pode copiar o arquivo\par
+"01-cgminer.rules" do arquivo cgminer para /etc/udev/rules.d\par
+Com o seguinte comando:\par
+\par
+ Sudo cp 01-cgminer.rules /etc/udev/rules.d/\par
+\par
+Depois disso, voc\'ea pode reiniciar manualmente o udev e reiniciar o login, ou mais facilmente\par
+Apenas reinicie.\par
+\par
+\par
+OSX:\par
+\par
+No OSX, como o Linux, nenhum driver precisa ser instalado. No entanto, alguns dispositivos\par
+Como o bitfury USB sticks automaticamente carregar um driver pensando que eles s\'e3o um\par
+Modem e o driver precisa ser descarregado para que o cgminer funcione:\par
+\par
+ Sudo kextunload -b com.apple.driver.AppleUSBCDC\par
+ Sudo kextunload -b com.apple.driver.AppleUSBCDCACMData\par
+\par
+Pode haver um limite para o n\'famero de dispositivos USB que voc\'ea pode iniciar.\par
+O seguinte conjunto de comandos, seguido de uma reinicializa\'e7\'e3o aumentar\'e1:\par
+\par
+ Sudo su\par
+ Toque em /etc/sysctl.conf\par
+ Echo kern.sysv.semume = 100 >> /etc/sysctl.conf\par
+ Chown root: roda /etc/sysctl.conf\par
+ Chmod 0644 /etc/sysctl.conf\par
+\par
+Alguns dispositivos precisam de acesso de superusu\'e1rio para os meus, para que o cgminer precise\par
+Ser iniciado com sudo\par
+Ie:\par
+ Sudo cgminer <inserir comandos aqui>\par
+\par
+\par
+---\par
+\par
+Op\'e7\'f5es avan\'e7adas de USB:\par
+\par
+A op\'e7\'e3o --usb pode restringir quantos dispositivos USB s\'e3o encontrados:\par
+\par
+  --usb 1: 2,1: 3,1: 4,1: *\par
+ou\par
+  --usb BAS: 1, BFL: 1, MMQ: 0, ICA: 0, KLN: 0\par
+ou\par
+  --usb: 10\par
+\par
+Voc\'ea s\'f3 pode usar um dos 3 acima\par
+\par
+A primeira vers\'e3o\par
+  --usb 1: 2,1: 3,1: 4,1: *\par
+Permite que voc\'ea selecione quais dispositivos para minar com uma lista de USB\par
+ Bus_number: device_address\par
+Todos os outros dispositivos USB ser\'e3o ignorados\par
+O Hotplug tamb\'e9m s\'f3 ver\'e1 os dispositivos que correspondem \'e0 lista especificada e\par
+N\'e3o encontrar nada de novo se eles est\'e3o todos em uso\par
+Voc\'ea pode especificar apenas o bus_number USB para encontrar todos os dispositivos como 1: *\par
+O que significa que quaisquer dispositivos no USB bus_number 1\par
+Isso \'e9 \'fatil se voc\'ea desconectar um dispositivo e conect\'e1-lo novamente na mesma porta,\par
+Ele geralmente reaparece com o mesmo n\'famero de barramento, mas um endere\'e7o de dispositivo diferente\par
+\par
+Voc\'ea pode ver a lista de todos os dispositivos USB no linux com 'sudo lsusb'\par
+O Cgminer listar\'e1 os dispositivos USB reconhecidos\par
+\par
+Com a op\'e7\'e3o '-n' ou\par
+Op\'e7\'e3o '--usb-dump 0'\par
+A op\'e7\'e3o '--usb-dump N' com um valor de N maior que 0 ir\'e1 despejar muito\par
+De detalhes sobre cada dispositivo USB reconhecido\par
+Se voc\'ea deseja ver todos os dispositivos USB, inclua a op\'e7\'e3o --usb-list-all\par
+\par
+A segunda vers\'e3o\par
+  --usb BAS: 1, BFL: 1, MMQ: 0, ICA: 0, KLN: 0\par
+Permite especificar quantos dispositivos escolher com base em cada dispositivo\par
+Driver cgminer tem - os atuais drivers USB s\'e3o:\par
+AVA, BAS, BFL, BF1, DRB, HFA, ICA, KLN e MMQ.\par
+\par
+Nota: voc\'ea s\'f3 pode especificar qual driver de dispositivo limitar, n\'e3o o tipo de\par
+Cada dispositivo, por exemplo, com BAS: n pode limitar o n\'famero de dispositivos BFL ASIC\par
+Ser verificado, mas voc\'ea n\'e3o pode limitar o n\'famero de cada tipo de BFL ASIC\par
+\par
+Observe tamb\'e9m que a contagem MMQ \'e9 o n\'famero de backplanes MMQ que voc\'ea tem\par
+N\'e3o o n\'famero de FPGAs MMQ\par
+\par
+A terceira vers\'e3o\par
+  --usb: 10\par
+Significa apenas usar um m\'e1ximo de 10 dispositivos de qualquer dispositivo USB suportado\par
+Uma vez que cgminer tem 10 dispositivos ele n\'e3o vai configurar mais e hotplug vai\par
+N\'e3o digitalizar mais\par
+Se um dos 10 dispositivos parar de funcionar, hotplug - se ativado, como \'e9 padr\'e3o\par
+- ir\'e1 digitalizar normalmente novamente at\'e9 que tenha 10 dispositivos\par
+\par
+  --usb: 0 desativar\'e1 todas as E / S USB al\'e9m de inicializar o libusb\par
+\par
+---\par
+\par
+ENQUANTO CORRENDO:\par
+\par
+As seguintes op\'e7\'f5es est\'e3o dispon\'edveis durante a execu\'e7\'e3o com uma \'fanica tecla:\par
+\par
+ [U] SB gest\'e3o [P] ool gest\'e3o [S] ettings [D] isplay op\'e7\'f5es [Q] uit\par
+\par
+\par
+U d\'e1-lhe:\par
+\par
+[S] om\'e1rio das informa\'e7\'f5es do dispositivo\par
+[Dispositivo E] n\'e1vel\par
+[D] dispositivo isable\par
+[U] nplug para permitir a reinicializa\'e7\'e3o do hotplug\par
+[R] eset dispositivo USB\par
+[L] ist todos os dispositivos conhecidos\par
+[B] lacklist dispositivo atual da inst\'e2ncia atual de cgminer\par
+[W] hitelist dispositivo previamente listado na lista negra\par
+[H] otplug intervalo (0 para desativar)\par
+\par
+\par
+P d\'e1-lhe:\par
+\par
+Estrat\'e9gia de gerenciamento de pool atual: failover\par
+[F] ailover somente desativado\par
+[A] dd piscina [R] emove pool [D] isable pool [E] nable pool\par
+[C] hange management strategy [S] pool de bruxas [I] nformation\par
+\par
+\par
+S d\'e1-lhe:\par
+\par
+[Q] ueue: 1\par
+[S] cantime: 60\par
+[E] xpiry: 120\par
+[W] arquivo de configura\'e7\'e3o do rite\par
+[C] gminer reiniciar\par
+\par
+\par
+D d\'e1-lhe:\par
+\par
+[N] ormal [C] lear [S] ilent modo (desativar toda a sa\'edda)\par
+[D] ebug: off\par
+[P] er-dispositivo: desligado\par
+[Q] uiet: desligado\par
+[V] erbose: desligado\par
+[R] depura\'e7\'e3o do PC: off\par
+[W] orkTime detalhes: desligado\par
+Co [M] pacto: desligado\par
+[T] alternar estado de comuta\'e7\'e3o: ativado\par
+[Z] ero estat\'edsticas\par
+[L] og intervalo: 5\par
+\par
+\par
+Q fecha o aplicativo.\par
+\par
+\par
+O log de execu\'e7\'e3o mostra sa\'edda como esta:\par
+\par
+ [2013-11-09 11:04:41] Aceitado 01b3bde7 Diff 150/128 AVA 1 pool 0\par
+ [2013-11-09 11:04:49] Aceito 015df995 Diff 187/128 AVA 1 pool 0\par
+ [2013-11-09 11:04:50] Aceito 01163b68 Diff 236/128 AVA 1 pool 0\par
+ [2013-11-09 11:04:53] Aceitado 9f745840 Diff 411/128 BAS 1 pool 0\par
+\par
+O valor hexadecimal de 8 bytes s\'e3o os 1o bytes diferentes de zero do compartilhamento que est\'e1 sendo enviado para\par
+a piscina. Os 2 valores diff s\'e3o o alvo de dificuldade real que a quota atingiu\par
+Seguido pelo alvo de dificuldade que o pool est\'e1 pedindo atualmente.\par
+\par
+---\par
+Tamb\'e9m muitas quest\'f5es e FAQs s\'e3o abordados no t\'f3pico do f\'f3rum\par
+Dedicado a este programa,\par
+\tab {{\field{\*\fldinst{HYPERLINK Http://forum.bitcoin.org/index.php?topic=28402.0 }}{\fldrslt{Http://forum.bitcoin.org/index.php?topic=28402.0\ul0\cf0}}}}\f0\fs22\par
+\par
+EXIBI\'c7\'c3O:\par
+\par
+A tela \'e9 dividida grosseiramente em duas partes, a janela de status\par
+Janela de registro de rolagem inferior.\par
+\par
+\par
+JANELA DE ESTADO\par
+A janela de status \'e9 dividida em status geral e por status de dispositivo.\par
+\par
+Estado geral:\par
+\par
+A linha de sa\'edda mostra o seguinte:\par
+ (5s): 2,469T (1m): 2,677T (5m): 2,040T (15m): 1,014T (m\'e9dia): 2,733Th / s\par
+\par
+Estes s\'e3o exponencialmente decaimento m\'e9dio hashrates mais de 5s / 1m / 5m / 15m e um\par
+M\'e9dia desde o in\'edcio.\par
+\par
+Seguido por:\par
+ A: 290391 R: 5101 HW: 145 WU: 37610,4 / m\par
+\par
+Cada coluna \'e9 a seguinte:\par
+R: A dificuldade total das a\'e7\'f5es aceitas\par
+R: A dificuldade total de a\'e7\'f5es rejeitadas\par
+HW: o n\'famero de erros HardWare\par
+WU: O utilit\'e1rio de trabalho definido como o n\'famero de a\'e7\'f5es diff1 trabalho / minuto\par
+     (Aceito ou rejeitado).\par
+\par
+Alternando com:\par
+ ST: 22 SS: 0 NB: 2 LW: 356090 GF: 0 RF: 0\par
+\par
+ST \'e9 itens de trabalho STaged (pronto a usar).\par
+SS \'e9 Stale Shares descartados (detectados e n\'e3o submetidos por isso n\'e3o contam como rejeitados)\par
+NB: novos blocos detectados na rede\par
+LW \'e9 Gerado localmente Itens de trabalho\par
+GF \'e9 Getwork Fail Ocasi\'f5es (servidor lento para fornecer trabalho)\par
+RF \'e9 Remote Fail ocasi\'f5es (servidor lento para aceitar trabalho)\par
+\par
+Seguido por:\par
+ Conectado a pool.com diff 3.45K com stratum como user me\par
+\par
+O diferido mostrado \'e9 o vardiff atual solicitado pelo pool atualmente sendo\par
+Minadas em\par
+\par
+Seguido por:\par
+Bloco: ca0d237f ... Diff: 5.01G Iniciado: [00:14:27] Melhor parte: 1.18M\par
+\par
+Isso mostra um trecho curto sobre o bloco atual, quando o novo bloco come\'e7ou,\par
+E a melhor dificuldade de todos os tempos que voc\'ea encontrou desde que come\'e7ou o cgminer\par
+desta vez.\par
+\par
+Por estado do dispositivo:\par
+\par
+ 6: HFS Random: 645MHz 85C 13% 0,79V | 2.152T / 1.351Th / s\par
+\par
+Cada coluna \'e9 a seguinte:\par
+Temperatura (se suportado)\par
+Fanspeed (se suportado)\par
+Voltagem (se suportado)\par
+\par
+Uma taxa de hash m\'e9dia exponencial decrescente de 5 segundos\par
+Uma taxa de hash m\'e9dia de todos os tempos\par
+\par
+Alternando com\par
+\par
+ 6: HFS Random: 645MHz 86C 13% 0,80V | A: 290348 R: 1067 HW: 88 WU: 18901,8 / m\par
+\par
+A dificuldade total das a\'e7\'f5es aceitas\par
+A dificuldade total das a\'e7\'f5es rejeitadas\par
+O n\'famero de erorrs de hardware\par
+A utilidade de trabalho definida como o n\'famero de compartilhamentos diff1 trabalho / minuto\par
+\par
+\par
+JANELA DE REGISTRO\par
+\par
+Todas as informa\'e7\'f5es correntes s\'e3o mostradas aqui, geralmente compartilham\par
+Bloquear notifica\'e7\'f5es de atualiza\'e7\'e3o, juntamente com mensagens e avisos do dispositivo.\par
+\par
+ [2014-03-29 00:24:09] Aceitado 1397768d Diff 3.35K / 2727 HFS 0 pool 0\par
+ [2014-03-29 00:24:13] Estrato do pool 0 detectou novo bloco\par
+\par
+\par
+---\par
+MULTIPOOL\par
+\par
+ESTRAT\'c9GIAS DE FAILOVER COM MULTIPOOL:\par
+V\'e1rias estrat\'e9gias diferentes para lidar com configura\'e7\'f5es de\par
+acess\'edvel. Cada um tem suas vantagens e desvantagens, de modo que v\'e1rias estrat\'e9gias\par
+Est\'e3o dispon\'edveis por escolha do utilizador, de acordo com a seguinte lista:\par
+\par
+FAILOVER:\par
+A estrat\'e9gia padr\'e3o \'e9 failover. Isto significa que se voc\'ea inserir um n\'famero de\par
+Piscinas, tentar\'e1 us\'e1-las como uma lista priorit\'e1ria, afastando-se do primeiro\par
+Para o 2 \'ba, 2 \'ba para 3 \'ba e assim por diante. Se algum dos pools anteriores se recuperar,\par
+Voltar para os de maior prioridade.\par
+\par
+ROUND ROBIN:\par
+Esta estrat\'e9gia s\'f3 se move de um pool para o pr\'f3ximo quando o atual cai\par
+Ocioso e n\'e3o faz nenhuma tentativa de mover o contr\'e1rio.\par
+\par
+ROTATE:\par
+Esta estrat\'e9gia se move em intervalos definidos pelo usu\'e1rio de um pool ativo para o pr\'f3ximo,\par
+Saltando piscinas que est\'e3o ociosas.\par
+\par
+BALANCEAMENTO DE CARGA:\par
+Essa estrat\'e9gia envia trabalho para todos os pools com base em cotas. Por padr\'e3o, todos os\par
+S\'e3o atribu\'eddas quotas iguais, a menos que especificado com - quota. este\par
+A reparti\'e7\'e3o do trabalho \'e9 baseada no trabalho distribu\'eddo, e n\'e3o nas a\'e7\'f5es devolvidas\par
+Independentemente dos objetivos de dificuldade ou das a\'e7\'f5es rejeitadas. Enquanto um pool est\'e1 desativado\par
+Ou morta, sua cota \'e9 descartada at\'e9 que ela seja reativada. As cotas s\'e3o adiante\par
+Olhando, assim se a quota \'e9 alterada na mosca, afeta somente o trabalho futuro.\par
+Se todos os pools estiverem definidos como zero quota ou todos os pools com quota estiverem\par
+Voltar a um modo de activa\'e7\'e3o p\'f3s-falha. Consulte a cota abaixo para obter mais informa\'e7\'f5es.\par
+\par
+O sinalizador de failover tem um significado especial em combina\'e7\'e3o com load-balance\par
+Modo e ele ir\'e1 distribuir quota de volta ao pool de prioridade 0 de todos os pools que\par
+S\'e3o incapazes de fornecer trabalho por qualquer raz\'e3o, de modo a manter os\par
+Entre o resto das piscinas.\par
+\par
+EQUILIBRAR:\par
+Esta estrat\'e9gia monitora a quantidade de dificuldade 1 a\'e7\'e3o resolvida para cada pool\par
+E usa-lo para tentar acabar fazendo a mesma quantidade de trabalho para todas as piscinas.\par
+\par
+\par
+---\par
+QUOTAS\par
+\par
+A estrat\'e9gia de multi-balanceamento de balanceamento de carga funciona com um planejador baseado em cota. o\par
+As quotas distribu\'eddas por padr\'e3o s\'e3o iguais, mas o usu\'e1rio pode especificar qualquer\par
+Propor\'e7\'e3o arbitr\'e1ria de quotas. Por exemplo, se todos os valores de cota adicionarem at\'e9 100,\par
+Cada valor de cota ser\'e1 uma porcentagem, mas se 2 pools forem especificados e pool0\par
+\'c9 dada uma quota de 1 e pool1 \'e9 dada uma quota de 9, pool0 ter\'e1 10% de\par
+O trabalho eo pool1 receber\'e3o 90%. Quotas podem ser alteradas na mosca pela API,\par
+E n\'e3o agir retrospectivamente. A defini\'e7\'e3o de uma quota para zero\par
+Desativar esse pool, a menos que todos os outros pools estejam desativados ou mortos. Naquilo\par
+Cen\'e1rio, o equil\'edbrio de carga recai para a estrat\'e9gia de prioridade baseada em failover.\par
+Enquanto um pool est\'e1 morto, ele perde sua cota e nenhuma tentativa \'e9 feita para recuperar o atraso\par
+Quando ele volta \'e0 vida.\par
+\par
+Para especificar cotas na linha de comando, os pools devem ser especificados\par
+Ponto-e-v\'edrgula --quota (ou -U) em vez de --url. Pools especificados com\par
+- url \'e9 dado um valor de quota nominal de 1 e entradas podem ser misturadas.\par
+\par
+Por exemplo:\par
+--url poola: porta -u usernamea -p passa --quota "2; poolb: portb" -u usernameb -p passb\par
+Dar\'e1 poola 1/3 do trabalho e poolb 2/3 do trabalho.\par
+\par
+A cria\'e7\'e3o de arquivos de configura\'e7\'e3o com cotas tamb\'e9m \'e9 suportada. Para usar o acima\par
+Quotas em um arquivo de configura\'e7\'e3o eles seriam especificados assim:\par
+\par
+"Piscinas": [\par
+        \{\par
+                "Url": "poola: porta",\par
+                "User": "usernamea",\par
+                "Pass": "passa"\par
+        \},\par
+        \{\par
+                "Quota": "2; poolb: portb";\par
+                "User": "usernameb",\par
+                "Pass": "passb"\par
+        \}\par
+]\par
+\par
+\par
+---\par
+Minera\'e7\'e3o solit\'e1ria\par
+\par
+A minera\'e7\'e3o individual pode ser efetuada eficientemente como uma entrada de pool \'fanica ou um backup para\par
+Qualquer outro pool de minera\'e7\'e3o e \'e9 recomendado que todos tenham solo minera\'e7\'e3o criado\par
+Como seu backup final no caso de todas as suas outras pools s\'e3o DDoSed / down para o\par
+Seguran\'e7a da rede. Para habilitar a minera\'e7\'e3o solo, um deve estar executando um local\par
+Bitcoind / bitcoin-qt ou ter um que t\'eam rpc acesso. Para fazer isso, edite\par
+Bitcoind arquivo de configura\'e7\'e3o (bitcoin.conf) com as seguintes linhas extra,\par
+Usando sua escolha de nome de usu\'e1rio e senha:\par
+\par
+Rpcuser = nome de usu\'e1rio\par
+Rpcpassword = senha\par
+\par
+Reinicie o bitcoind e, em seguida, inicie o cgminer, apontando para o bitcoind e\par
+Btc com as seguintes op\'e7\'f5es, alterando para se adequar \'e0 sua configura\'e7\'e3o:\par
+\par
+Cgminer -o http: // localhost: 8332 -u username -p senha --btc-address 15qSxP1SQcUX3o4nhkfdbgyoWEFMomJ4rZ\par
+\par
+Observe que o http: // \'e9 obrigat\'f3rio para a minera\'e7\'e3o solo.\par
+\par
+---\par
+EXPLORA\'c7\'c3O MADEIREIRA\par
+\par
+Cgminer ser\'e1 log para stderr se ele detectar stderr est\'e1 sendo redirecionado para um arquivo.\par
+Para ativar o log simplesmente adicione 2> logfile.txt \'e0 sua linha de comando e logfile.txt\par
+Conter\'e1 a sa\'edda registrada no n\'edvel de log especificado (normal, verboso,\par
+Depurar etc.)\par
+\par
+Em outras palavras, se voc\'ea usaria normalmente:\par
+./cgminer -o xxx -u yyy -p zzz\par
+se voc\'ea usar\par
+./cgminer -o xxx -u yyy -p zzz 2> logfile.txt\par
+Ele ser\'e1 registrado em um arquivo chamado logfile.txt e, de outra forma, funcionar\'e1 da mesma forma.\par
+\par
+H\'e1 tamb\'e9m a op\'e7\'e3o -m no linux que ir\'e1 gerar um comando de sua escolha\par
+E canalizar a sa\'edda diretamente para esse comando.\par
+\par
+A op\'e7\'e3o de detalhes 'depura\'e7\'e3o' do WorkTime adiciona detalhes no final de cada linha\par
+Exibido para o trabalho Aceito ou Rejeitado. Um exemplo seria:\par
+\par
+ <-00000059.ed4834a3 M: XD: 1,0 G: 17: 02: 38: 0,405 C: 1,855 (2,995) W: 3,440 (0,000) S: 0,461 R: 17: 02: 47\par
+\par
+Os primeiros 2 c\'f3digos hexadecimais s\'e3o o hash de bloco anterior, o restante \'e9 relatado em\par
+Segundos, salvo indica\'e7\'e3o em contr\'e1rio:\par
+O hash anterior \'e9 seguido pelo modo de rede utilizado M: X onde X \'e9 um dos\par
+P: Pool, T: Pool de teste, L: LP ou B: Benchmark,\par
+Ent\'e3o D: d.ddd \'e9 a dificuldade necess\'e1ria para obter uma parte do trabalho,\par
+Ent\'e3o G: hh: mm: ss: n.nnn, que \'e9 quando o getwork ou LP foi enviado para o pool e\par
+O n.nnn \'e9 quanto tempo levou para responder,\par
+Seguido por 'O' em seu pr\'f3prio se \'e9 uma rede original, ou 'C: n.nnn' se fosse\par
+Um clone com n.nnn indicando quanto tempo ap\'f3s o trabalho foi recebido que foi clonado,\par
+(M.mmm) \'e9 quanto tempo de quando o trabalho original foi recebido at\'e9 que o trabalho come\'e7ou,\par
+W: n.nnn \'e9 quanto tempo o trabalho levou para processar at\'e9 que ele estava pronto para apresentar,\par
+(M.mmm) \'e9 quanto tempo de pronto para submeter a realmente fazer a submeter, este \'e9\par
+Geralmente 0.000 a menos que houvesse um problema com submeter o trabalho,\par
+S: n.nnn \'e9 quanto tempo levou para apresentar o trabalho conclu\'eddo e aguardar a resposta,\par
+R: hh: mm: ss \'e9 o tempo real que a resposta de envio de trabalho foi recebida\par
+\par
+Se voc\'ea iniciar cgminer com a op\'e7\'e3o --sharelog, voc\'ea pode obter detalhes\par
+Informa\'e7\'f5es para cada a\'e7\'e3o encontrada. O argumento para a op\'e7\'e3o pode ser "-" para\par
+Sa\'edda padr\'e3o (n\'e3o aconselh\'e1vel com a UI ncurses), qualquer n\'famero positivo v\'e1lido\par
+Para esse descritor de arquivo, ou um nome de arquivo.\par
+\par
+Para registrar dados de compartilhamento em um arquivo chamado "share.log", voc\'ea pode usar:\par
+./cgminer --sharelog 50 -o xxx -u yyy -p zzz 50> share.log\par
+./cgminer --sharelog share.log -o xxx -u yyy -p zzz\par
+\par
+Para cada compartilhamento encontrado, os dados ser\'e3o registrados em um CSV (Comma Separated Value)\par
+formato:\par
+    Timestamp, disposi\'e7\'e3o, destino, pool, dev, thr, sharehash, sharedata\par
+Por exemplo (este \'e9 embrulhado, mas \'e9 tudo em uma linha para real):\par
+    1335313090, rejeitar,\par
+    Ffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000,\par
+    Http: // localhost: 8337, ASC0,0,\par
+    6f983c918f3299b58febf95ec4d0c7094ed634bc13754553ec34fc3800000000,\par
+    00000001a0980aff4ce4a96d53f4b89a2d5f0e765c978640fe24372a000001c5\par
+    000000004a4366808f81d44f26df3d69d7dc4b3473385930462d9ab707b50498\par
+    F681634a4f1f63d01a0cd43fb338000000000080000000000000000000000000\par
+    0000000000000000000000000000000000000000000000000000000080020000\par
+\par
+---\par
+\par
+Benchmark\par
+\par
+A op\'e7\'e3o --benchmark hashes um \'fanico item de trabalho fixo repetidamente e faz\par
+N\'e3o submeter a\'e7\'f5es a qualquer pool.\par
+\par
+A op\'e7\'e3o --benchfile <arg> hashes o trabalho dado no arquivo <arg> fornecido.\par
+O formato do ficheiro de trabalho \'e9:\par
+Vers\'e3o, merkleroot, prevhash, diffbits, noncetime\par
+Qualquer linha vazia ou qualquer linha come\'e7ando com '#' ou '/' \'e9 ignorada.\par
+Quando ele chega ao final do arquivo ele continua de volta no topo.\par
+\par
+O formato dos itens de dados coincide com o ordenamento e o formato dos\par
+A sa\'edda bitcoind getblock RPC.\par
+\par
+Um arquivo de exemplo contendo bitcoin bloco # 1 seria:\par
+\par
+# Bloco 1\par
+1,0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098,00000000001\par
+9d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f, 1d00ffff, 1231469665\par
+\par
+No entanto, os dados de trabalho devem ser uma linha sem o linebreak no meio\par
+\par
+Se voc\'ea usar --benchfile <arg>, ent\'e3o --benchfile-display exibir\'e1 uma linha de registro,\par
+Para cada nonce encontrado, mostrando o valor nonce em decimal e hex e o trabalho\par
+Usado para encontr\'e1-lo em hexadecimal.\par
+\par
+---\par
+\par
+API RPC\par
+\par
+Para detalhes da API RPC, consulte o arquivo API-README\par
+\par
+---\par
+\par
+Perguntas frequentes\par
+\par
+Q: Ajuda, eu comecei cgminer e tudo l\'ea zero !?\par
+R: Bem-vindo \'e0 minera\'e7\'e3o bitcoin. Seu computador por si s\'f3 n\'e3o pode minar bitcoin n\'e3o\par
+N\'e3o importa qu\'e3o poderoso ele \'e9. Voc\'ea precisa comprar hardware de minera\'e7\'e3o dedicado\par
+Chamado ASICs para ligar ao seu computador. Veja Q sobre ASICs abaixo.\par
+\par
+P: Tenho v\'e1rios dispositivos USB stick, mas n\'e3o consigo fazer com que todos trabalhem ao mesmo tempo?\par
+R: Muito poucos hubs USB fornecem a pot\'eancia prometida necess\'e1ria para executar tantos dispositivos\par
+Como eles se encaixam se todos eles extraem poder de USB.\par
+\par
+P: Eu liguei meus dispositivos em meu hub USB, mas nada apareceu?\par
+R: O RPis e o Windows t\'eam suporte USB3 incompleto ou n\'e3o padr\'e3o para que possam\par
+Nunca funcionam Pode ser poss\'edvel obter um hub USB3 para trabalhar, ligando-o\par
+Um hub USB2. Ao escolher um hub, USB2 hubs s\'e3o prefer\'edveis sempre que poss\'edvel\par
+Devido a um melhor apoio todo o ano.\par
+\par
+P: Posso explorar servidores de redes diferentes (por exemplo, xxxcoin e bitcoin) em\par
+o mesmo tempo?\par
+R: N\'e3o, o cgminer mant\'e9m um banco de dados do bloco em que est\'e1 trabalhando para garantir que ele n\'e3o\par
+N\'e3o funcionar em blocos obsoletos, e ter blocos diferentes de duas redes seria\par
+Torn\'e1-lo invalidar o trabalho uns dos outros.\par
+\par
+P: Posso configurar o cgminer para o meu com credenciais ou pools de login diferentes\par
+Para cada dispositivo separado?\par
+R: N\'e3o.\par
+\par
+P: Posso colocar v\'e1rios pools no arquivo de configura\'e7\'e3o?\par
+R: Sim, verifique o arquivo example.conf. Como alternativa, configure tudo\par
+A linha de comando ou atrav\'e9s do menu ap\'f3s a inicializa\'e7\'e3o e escolha settings-> write\par
+Config eo arquivo ser\'e1 carregado um a cada inicializa\'e7\'e3o.\par
+\par
+P: A compila\'e7\'e3o falha com gcc \'e9 incapaz de construir um bin\'e1rio.\par
+R: Remover o componente "-march = nativo" de seu CFLAGS como sua vers\'e3o do gcc\par
+N\'e3o o suporta. Tamb\'e9m -O2 \'e9 capital o 2, n\'e3o zero 2.\par
+\par
+P: Voc\'ea pode implementar o recurso X?\par
+R: Eu posso, mas o tempo \'e9 limitado, e as pessoas que doam s\'e3o mais propensas a\par
+Suas solicita\'e7\'f5es de recurso implementadas.\par
+\par
+P: O trabalho continua indo para o pool de backup mesmo que meu pool prim\'e1rio n\'e3o tenha\par
+Falhou\par
+R: A Cgminer verifica as condi\'e7\'f5es em que o pool prim\'e1rio est\'e1 atrasado e\par
+Passar algum trabalho para os servidores de backup nessas condi\'e7\'f5es. A raz\'e3o para\par
+Fazer isso \'e9 tentar o seu melhor absoluto para manter os dispositivos trabalhando em algo\par
+Per\'edodos de ociosidade \'fateis e n\'e3o de risco. Voc\'ea pode desativar esse comportamento com o\par
+Op\'e7\'e3o --failover-only.\par
+\par
+P: \'c9 um v\'edrus?\par
+A: Cgminer est\'e1 sendo empacotado com outros scripts trojan e alguns antiv\'edrus\par
+Software est\'e1 falsamente acusando cgminer.exe como sendo o v\'edrus real,\par
+Do que tudo o que est\'e1 sendo embalado com. Se voc\'ea instalou o cgminer,\par
+Ent\'e3o voc\'ea n\'e3o tem um v\'edrus em seu computador. Reclamar ao seu antiv\'edrus\par
+empresa de software. Eles parecem estar marcando mesmo c\'f3digo fonte agora de cgminer\par
+Como v\'edrus, mesmo que os arquivos de fonte de texto n\'e3o podem fazer nada por si mesmos.\par
+\par
+P: Voc\'ea pode modificar a exibi\'e7\'e3o para incluir mais de uma coisa na sa\'edda e\par
+Menos de outro, ou voc\'ea pode mudar o modo silencioso ou voc\'ea pode adicionar outro\par
+Modo de sa\'edda?\par
+R: Todos ter\'e3o sempre sua pr\'f3pria vis\'e3o do que \'e9 importante monitorar.\par
+Os padr\'f5es s\'e3o muito saud\'e1veis \u8203?\u8203?e eu tenho muito pouco interesse em mudar este\par
+Qualquer outra. H\'e1 muito mais detalhes na sa\'edda de API do que pode ser razoavelmente\par
+Exibida na pequena janela do console e usando uma interface externa\par
+Como mine.php \'e9 muito mais \'fatil para configura\'e7\'f5es com muitos dispositivos.\par
+\par
+Q: Quais s\'e3o os melhores par\'e2metros para passar para X pool / hardware / dispositivo.\par
+R: Praticamente sempre, os par\'e2metros DEFAULT d\'e3o os melhores resultados. A maioria dos usu\'e1rios\par
+Configura\'e7\'f5es definidas levam a um desempenho pior.\par
+\par
+P: O que aconteceu com a CPU e a GPU?\par
+R: Sua efici\'eancia as torna irrelevantes no mundo da minera\'e7\'e3o bitcoin hoje\par
+E o autor n\'e3o tem nenhum interesse em apoiar moedas alternativas que s\'e3o melhores\par
+Minados por esses dispositivos.\par
+\par
+Q: Vers\'e3o GUI?\par
+R: N\'e3o. A interface RPC possibilita que outra pessoa escreva uma\par
+Apesar.\par
+\par
+Q: Estou tendo um problema. Que informa\'e7\'f5es de depura\'e7\'e3o devo fornecer?\par
+R: Inicie o cgminer com seus comandos normais e adicione -D -T --verbose e forne\'e7a\par
+A sa\'edda de inicializa\'e7\'e3o completa e um resumo de seu hardware e sistema operacional.\par
+\par
+P: Por que voc\'ea n\'e3o fornece win64 constr\'f3i?\par
+R: Win32 constr\'f3i trabalho em todos os lugares e h\'e1 precisamente zero vantagem para um\par
+64 bit construir em janelas.\par
+\par
+Q: \'c9 mais r\'e1pido para o meu em windows ou linux?\par
+R: N\'e3o faz diferen\'e7a em termos de desempenho. Trata-se de escolha de\par
+Sistema operacional para suas v\'e1rias caracter\'edsticas e seu n\'edvel de conforto. Contudo\par
+O linux \'e9 a principal plataforma de desenvolvimento e est\'e1 virtualmente\par
+mais est\'e1vel.\par
+\par
+P: Minha rede fica mais lenta e mais lenta e depois morre por um minuto?\par
+UMA; Experimente a op\'e7\'e3o --net-delay se voc\'ea estiver em um servidor getwork ou GBT. Isso n\'e3o\par
+Nada com estrato de minera\'e7\'e3o.\par
+\par
+P: Como sinto para o p2pool?\par
+R: Tamb\'e9m \'e9 recomend\'e1vel usar --failover-somente, uma vez que o trabalho \'e9 efetivamente\par
+Como uma cadeia de bloco diferente, e n\'e3o permitindo --no-submit-stale. Se a minera\'e7\'e3o\par
+Uma miniaplica\'e7\'e3o BFL (fpga), vale a pena adicionar a op\'e7\'e3o --bfl-range.\par
+\par
+P: Eu executo o PHP no Windows para acessar a API com o exemplo mineiro.php. Porque\par
+Ele falha quando php est\'e1 instalado corretamente, mas eu s\'f3 obter erros sobre Soquetes n\'e3o\par
+Trabalhando nos logs?\par
+A: {{\field{\*\fldinst{HYPERLINK http://us.php.net/manual/en/sockets.installation.php }}{\fldrslt{http://us.php.net/manual/en/sockets.installation.php\ul0\cf0}}}}\f0\fs22\par
+\par
+P: O que \'e9 uma PGA?\par
+A: Cgminer suporta 3 FPGAs: BitForce, \'cdcaro e ModMiner.\par
+Eles s\'e3o Field-Programmable Gate Arrays que foram programados para fazer Bitcoin\par
+minera\'e7\'e3o. Uma vez que o acr\'f4nimo precisa ter apenas 3 caracteres, a parte "Field-" tem\par
+Sido ignorado.\par
+\par
+P: O que \'e9 um ASIC?\par
+R: S\'e3o Aplica\'e7\'e3o Especificar Dispositivos de Circuito Integrado e\par
+Maior desempenho por unidade de pot\'eancia devido a ser dedicado a uma \'fanica finalidade.\par
+Eles s\'e3o a \'fanica maneira significativa de minar bitcoin hoje.\par
+\par
+P: O que \'e9 estrato e como us\'e1-lo?\par
+R: O Stratum \'e9 um protocolo concebido para a explora\'e7\'e3o conjunta de\par
+Minimizar a quantidade de comunica\'e7\'f5es de rede, mas escala para hardware de qualquer\par
+Rapidez. Com vers\'f5es do cgminer 2.8.0+, se um pool tem apoio de stratum, cgminer\par
+Ir\'e1 detect\'e1-lo automaticamente e mudar para o suporte como anunciado se puder.\par
+Se voc\'ea inserir a porta de stratum diretamente em sua configura\'e7\'e3o,\par
+Prefixo especial "stratum + tcp: //" em vez de "<{{\field{\*\fldinst{HYPERLINK "http: //"}}{\fldrslt{http: //\ul0\cf0}}}}\f0\fs22 >", o cgminer SOLO tentar\'e1\par
+Uso estrato protocolo de minera\'e7\'e3o. As vantagens do estrato para o mineiro n\'e3o s\'e3o\par
+Atrasos na obten\'e7\'e3o de mais trabalho para o mineiro, menos rejei\'e7\'f5es atrav\'e9s de mudan\'e7as de bloco,\par
+E muito menos comunica\'e7\'f5es de rede para a mesma quantidade de hashrate de minera\'e7\'e3o. E se\par
+Voc\'ea n\'e3o deseja que o cgminer mude automaticamente para o protocolo stratum mesmo que\par
+\'c9 detectado, adicione a op\'e7\'e3o --fix-protocol.\par
+\par
+P: Por que as estat\'edsticas n\'e3o somam: aceitado, rejeitado, obsoleto, erros de hardware,\par
+Diff1 Trabalho, etc, quando minera\'e7\'e3o maior do que 1 dificuldade partes?\par
+R: Como exemplo, se voc\'ea olhar para 'Dificuldade Aceita' na API RPC, o n\'famero\par
+De dificuldade aceita a\'e7\'f5es geralmente n\'e3o \'e9 exatamente igual a quantidade de trabalho\par
+Feito para encontr\'e1-los. Se voc\'ea est\'e1 minando em 8 dificuldade, ent\'e3o voc\'ea esperaria em\par
+M\'e9dia para encontrar uma parcela de 8 dificuldades, por 8 \'fanica dificuldade encontrado.\par
+No entanto, o n\'famero \'e9 realmente aleat\'f3rio e converge ao longo do tempo, \'e9 uma m\'e9dia,\par
+N\'e3o um valor exato, assim voc\'ea pode encontrar mais ou menos do que a m\'e9dia esperada.\par
+\par
+P: A entrada do teclado momentaneamente pausa ou repete as teclas de vez\par
+Janelas durante a minera\'e7\'e3o?\par
+R: A implementa\'e7\'e3o de USB em janelas pode ser muito escamosa em algum hardware e\par
+Cada vez que o cgminer procura um novo hardware para o hotplug pode causar\par
+Tipos de problemas. Voc\'ea pode desabilitar hotplug com:\par
+--hotplug 0\par
+\par
+P: Qual deve ser o meu utilit\'e1rio de trabalho (WU)?\par
+R: O utilit\'e1rio de trabalho \'e9 o produto da sorte * hashrate e s\'f3 estabiliza ao longo de um\par
+Muito longo per\'edodo de tempo. Assumindo que todo seu trabalho \'e9 um trabalho v\'e1lido, a minera\'e7\'e3o bitcoin\par
+Deve produzir uma utilidade de trabalho de aproximadamente 1 por 71.6MH. Isso significa que\par
+5GH voc\'ea deve ter um WU de 5000 / 71.6 ou ~ 69. Voc\'ea n\'e3o pode fazer sua m\'e1quina\par
+Fazer "WU melhor" do que isso - \'e9 sorte relacionados. No entanto, voc\'ea pode fazer muito\par
+Pior se sua m\'e1quina produz um monte de erros de hardware produzindo trabalho inv\'e1lido.\par
+\par
+P: O que devo construir para um bin\'e1rio de distribui\'e7\'e3o gen\'e9rico?\par
+R: H\'e1 uma s\'e9rie de drivers que esperam ser usados \u8203?\u8203?em aut\'f4nomo aut\'f4nomo\par
+Hardware. Dito isto, os drivers que s\'e3o projetados para funcionar genericamente com\par
+USB em qualquer hardware s\'e3o os seguintes:\par
+\par
+--enable-avalon\par
+--enable-avalon2\par
+--enable-avalon4\par
+--enable-bflsc\par
+--enable-bitfury\par
+--enable-cointerra\par
+--able-drillbit\par
+--enable-hashfast\par
+--enable-hashratio\par
+--enable-icarus\par
+--enable-klondike\par
+\par
+---\par
+\par
+Este c\'f3digo \'e9 fornecido de forma totalmente gratuita pelo programador em\par
+Tempo para que as doa\'e7\'f5es sejam muito apreciadas. Por favor considere doar para o\par
+Endere\'e7o abaixo.\par
+gytta.marilove@gmail.com\par
+1Bh1iY7MNZfeF8cp8UNf39jzueJ2bFE3Xo\par
+\par
+\par
+\par
+\par
+GIT TREE:\par
+\par
+{{\field{\*\fldinst{HYPERLINK https://github.com/ckolivas/cgminer }}{\fldrslt{https://github.com/ckolivas/cgminer\ul0\cf0}}}}\f0\fs22\par
+\par
+Support thread:\par
+\par
+{{\field{\*\fldinst{HYPERLINK http://bitcointalk.org/index.php?topic=28402.0 }}{\fldrslt{http://bitcointalk.org/index.php?topic=28402.0\ul0\cf0}}}}\f0\fs22\par
+\par
+IRC Channel:\par
+\par
+irc://irc.freenode.net/cgminer\par
+\par
+SEE ALSO API-README, ASIC-README and FGPA-README FOR MORE INFORMATION ON EACH.\par
+\par
+---\par
+\par
+EXECUTIVE SUMMARY ON USAGE:\par
+\par
+Single pool:\par
+\par
+cgminer -o {{\field{\*\fldinst{HYPERLINK http://pool:port }}{\fldrslt{http://pool:port\ul0\cf0}}}}\f0\fs22  -u username -p password\par
+\par
+Multiple pools:\par
+\par
+cgminer -o {{\field{\*\fldinst{HYPERLINK http://pool1:port }}{\fldrslt{http://pool1:port\ul0\cf0}}}}\f0\fs22  -u pool1username -p pool1password -o {{\field{\*\fldinst{HYPERLINK http://pool2:port }}{\fldrslt{http://pool2:port\ul0\cf0}}}}\f0\fs22  -u pool2usernmae -p pool2password\par
+\par
+Single pool with a standard http proxy:\par
+\par
+cgminer -o "{{\field{\*\fldinst{HYPERLINK http:proxy:port|http://pool:port }}{\fldrslt{http:proxy:port|http://pool:port\ul0\cf0}}}}\f0\fs22 " -u username -p password\par
+\par
+Single pool with a socks5 proxy:\par
+\par
+cgminer -o "socks5:proxy:port|http://pool:port" -u username -p password\par
+\par
+Single pool with stratum protocol support:\par
+\par
+cgminer -o stratum+tcp://pool:port -u username -p password1Bh1iY7MNZfeF8cp8UNf39jzueJ2bFE3Xo\par
+Solo mining to local bitcoind:\par
+\par
+cgminer -o {{\field{\*\fldinst{HYPERLINK http://localhost:8332 }}{\fldrslt{http://localhost:8332\ul0\cf0}}}}\f0\fs22  -u username -p password --btc-address \par
+The list of proxy types are:\par
+ http:    standard http 1.1 proxy\par
+ http0:   http 1.0 proxy\par
+ socks4:  socks4 proxy\par
+ socks5:  socks5 proxy\par
+ socks4a: socks4a proxy\par
+ socks5h: socks5 proxy using a hostname\par
+\par
+If you compile cgminer with a version of CURL before 7.19.4 then some of the above will\par
+not be available. All are available since CURL version 7.19.4\par
+\par
+If you specify the --socks-proxy option to cgminer, it will only be applied to all pools\par
+that don't specify their own proxy setting like above\par
+\par
+\par
+After saving configuration from the menu, you do not need to give cgminer any\par
+arguments and it will load your configuration.\par
+\par
+Any configuration file may also contain a single\par
+\tab "include" : "filename"\par
+to recursively include another configuration file.\par
+Writing the configuration will save all settings from all files in the output.\par
+\par
+\par
+---\par
+BUILDING CGMINER FOR YOURSELF\par
+\par
+DEPENDENCIES:\par
+Mandatory:\par
+\tab pkg-config\tab\tab {{\field{\*\fldinst{HYPERLINK http://www.freedesktop.org/wiki/Software/pkg-config }}{\fldrslt{http://www.freedesktop.org/wiki/Software/pkg-config\ul0\cf0}}}}\f0\fs22\par
+\tab libtool\tab\tab\tab {{\field{\*\fldinst{HYPERLINK http://www.gnu.org/software/libtool/ }}{\fldrslt{http://www.gnu.org/software/libtool/\ul0\cf0}}}}\f0\fs22\par
+Optional:\par
+\tab curl dev library \tab {{\field{\*\fldinst{HYPERLINK http://curl.haxx.se/libcurl/ }}{\fldrslt{http://curl.haxx.se/libcurl/\ul0\cf0}}}}\f0\fs22\par
+\tab (libcurl4-openssl-dev - Must tell configure --disable-libcurl otherwise\par
+\tab it will attempt to compile it in)\par
+\par
+\tab curses dev library\par
+\tab (libncurses5-dev or libpdcurses on WIN32 for text user interface)\par
+\par
+\tab libudev dev library (libudev-dev)\par
+\tab (This is only required for USB device support and is linux only)\par
+\par
+If building from git:\par
+\tab autoconf\par
+\tab automake\par
+\par
+If building on Red Hat:\par
+        sudo yum install autoconf automake autoreconf libtool openssl-compat-bitcoin-devel.x86_64 \\\par
+                         curl libcurl libcurl-devel openssh\par
+\par
+If building on Ubuntu:\par
+\tab sudo apt-get install build-essential autoconf automake libtool pkg-config \\\par
+                             libcurl3-dev libudev-dev\par
+\par
+CGMiner specific configuration options:\par
+  --enable-ants1          Compile support for Antminer S1 Bitmain (default\par
+                          disabled)\par
+  --enable-ants2          Compile support for Antminer S2 Bitmain (default\par
+                          disabled)\par
+  --enable-avalon         Compile support for Avalon (default disabled)\par
+  --enable-avalon2        Compile support for Avalon2 (default disabled)\par
+  --enable-avalon4        Compile support for Avalon4 (default disabled)\par
+  --enable-bab            Compile support for BlackArrow Bitfury (default\par
+                          disabled)\par
+  --enable-bflsc          Compile support for BFL ASICs (default disabled)\par
+  --enable-bitforce       Compile support for BitForce FPGAs (default\par
+                          disabled)\par
+  --enable-bitfury        Compile support for BitFury ASICs (default disabled)\par
+  --enable-bitmine_A1     Compile support for Bitmine.ch A1 ASICs (default\par
+                          disabled)\par
+  --enable-blockerupter   Compile support for ASICMINER BlockErupter Tube/Prisma\par
+  \tab\tab\tab   (default disabled)\par
+  --enable-cointerra      Compile support for Cointerra ASICs (default disabled)\par
+  --enable-drillbit       Compile support for Drillbit BitFury ASICs (default\par
+                          disabled)\par
+  --enable-hashfast       Compile support for Hashfast (default disabled)\par
+  --enable-icarus         Compile support for Icarus (default disabled)\par
+  --enable-klondike       Compile support for Klondike (default disabled)\par
+  --enable-knc            Compile support for KnC miners (default disabled)\par
+  --enable-minion         Compile support for Minion BlackArrow ASIC (default\par
+                          disabled)\par
+  --enable-modminer       Compile support for ModMiner FPGAs(default disabled)\par
+  --enable-sp10           Compile support for Spondoolies SP10 (default\par
+                          disabled)\par
+  --enable-sp30           Compile support for Spondoolies SP30 (default\par
+                          disabled)\par
+  --disable-libcurl       Disable building with libcurl for getwork and GBT\par
+                          support\par
+  --enable-libsystemd     Compile support for system watchdog and status\par
+                          notifications (default disabled)\par
+  --without-curses        Compile support for curses TUI (default enabled)\par
+  --with-system-libusb    Compile against dynamic system libusb (default use\par
+                          included static libusb)\par
+  --with-system-jansson   Compile against dynamic system jansson (default use\par
+                          included static jansson)\par
+\par
+Basic *nix build instructions:\par
+\tab To actually build:\par
+\par
+\tab ./autogen.sh\tab # only needed if building from git repo\par
+\tab CFLAGS="-O2 -Wall -march=native" ./configure <options>\par
+\tab make\par
+\par
+\tab No installation is necessary. You may run cgminer from the build\par
+\tab directory directly, but you may do make install if you wish to install\par
+\tab cgminer to a system location or location you specified.\par
+\par
+Building for windows:\par
+\par
+It is actually easiest to build a windows binary using cross compilation tools\par
+provided by "mxe" available at {{\field{\*\fldinst{HYPERLINK http://mxe.cc/ }}{\fldrslt{http://mxe.cc/\ul0\cf0}}}}\f0\fs22  (use the 32 bit one!)\par
+Once you have followed the instructions for building mxe:\par
+\tab export PATH=(path/to/mxe)/usr/bin/:$PATH\par
+\tab CFLAGS="-O2 -Wall -W -march=i686" ./configure --host=i686-pc-mingw32 <options>\par
+\tab make\par
+\par
+Native WIN32 build instructions: see windows-build.txt but these instructions\par
+are now hopelessly out of date.\par
+\par
+---\par
+\par
+Usage instructions:  Run "cgminer --help" to see options:\par
+\par
+Usage: cgminer [-DdElmpPQqUsTouOchnV]\par
+\par
+Options for both config file and command line:\par
+--anu-freq <arg>    Set AntminerU1/2 frequency in MHz, range 125-500 (default: 250.0)\par
+--api-allow <arg>   Allow API access only to the given list of [G:]IP[/Prefix] addresses[/subnets]\par
+--api-description <arg> Description placed in the API status header, default: cgminer version\par
+--api-groups <arg>  API one letter groups G:cmd:cmd[,P:cmd:*...] defining the cmds a groups can use\par
+--api-listen        Enable API, default: disabled\par
+--api-mcast         Enable API Multicast listener, default: disabled\par
+--api-mcast-addr <arg> API Multicast listen address\par
+--api-mcast-code <arg> Code expected in the API Multicast message, don't use '-'\par
+--api-mcast-des <arg> Description appended to the API Multicast reply, default: ''\par
+--api-mcast-port <arg> API Multicast listen port (default: 4028)\par
+--api-network       Allow API (if enabled) to listen on/for any address, default: only 127.0.0.1\par
+--api-port <arg>    Port number of miner API (default: 4028)\par
+--au3-freq <arg>    Set AntminerU3 frequency in MHz, range 100-250 (default: 225.0)\par
+--au3-volt <arg>    Set AntminerU3 voltage in mv, range 725-850, 0 to not set (default: 775)\par
+--avalon-auto       Adjust avalon overclock frequency dynamically for best hashrate\par
+--avalon-cutoff <arg> Set avalon overheat cut off temperature (default: 60)\par
+--avalon-fan <arg>  Set fanspeed percentage for avalon, single value or range (default: 20-100)\par
+--avalon-freq <arg> Set frequency range for avalon-auto, single value or range\par
+--avalon-options <arg> Set avalon options baud:miners:asic:timeout:freq:tech\par
+--avalon-temp <arg> Set avalon target temperature (default: 50)\par
+--avalon2-freq      Set frequency range for Avalon2, single value or range\par
+--avalon2-voltage   Set Avalon2 core voltage, in millivolts\par
+--avalon2-fan       Set Avalon2 target fan speed\par
+--avalon2-cutoff <arg> Set Avalon2 overheat cut off temperature (default: 88)\par
+--avalon2-fixed-speed Set Avalon2 fan to fixed speed\par
+--avalon4-automatic-voltage Automatic adjust voltage base on module DH\par
+--avalon4-voltage   Set Avalon4 core voltage, in millivolts, step: 125\par
+--avalon4-freq      Set frequency for Avalon4, 1 to 3 values, example: 445:385:370\par
+--avalon4-fan       Set Avalon4 target fan speed range\par
+--avalon4-temp <arg> Set Avalon4 target temperature (default: 42)\par
+--avalon4-cutoff <arg> Set Avalon4 overheat cut off temperature (default: 65)\par
+--avalon4-polling-delay <arg> Set Avalon4 polling delay value (ms) (default: 20)\par
+--avalon4-ntime-offset <arg> Set Avalon4 MM ntime rolling max offset (default: 4)\par
+--avalon4-aucspeed <arg> Set Avalon4 AUC IIC bus speed (default: 400000)\par
+--avalon4-aucxdelay <arg> Set Avalon4 AUC IIC xfer read delay, 4800 ~= 1ms (default: 9600)\par
+--bab-options <arg> Set BaB options max:def:min:up:down:hz:delay:trf\par
+--balance           Change multipool strategy from failover to even share balance\par
+--benchfile <arg>   Run cgminer in benchmark mode using a work file - produces no shares\par
+--benchfile-display Display each benchfile nonce found\par
+--benchmark         Run cgminer in benchmark mode - produces no shares\par
+--bet-clk <arg>     Set clockspeed of ASICMINER Tube/Prisma to (arg+1)*10MHz (default: 23)\par
+--bfl-range         Use nonce range on bitforce devices if supported\par
+--bflsc-overheat <arg> Set overheat temperature where BFLSC devices throttle, 0 to disable (default: 85)\par
+--bitburner-fury-voltage <arg> Set BitBurner Fury core voltage, in millivolts\par
+--bitburner-fury-options <arg> Override avalon-options for BitBurner Fury boards baud:miners:asic:timeout:freq\par
+--bitburner-voltage <arg> Set BitBurner (Avalon) core voltage, in millivolts\par
+--bitmain-auto      Adjust bitmain overclock frequency dynamically for best hashrate\par
+--bitmain-cutoff <arg> Set bitmain overheat cut off temperature\par
+--bitmain-fan <arg> Set fanspeed percentage for bitmain, single value or range (default: 20-100)\par
+--bitmain-freq <arg> Set bitmain freq options timeout:freq:regdata\par
+--bitmain-hwerror   Set bitmain device detect hardware error\par
+--bitmain-options <arg> Set bitmain options baud:miners:asic:timeout:freq:regdata\par
+--bitmain-temp <arg> Set bitmain target temperature\par
+--bitmain-workdelay <arg> Set bitmain work delay (ms) 0-100\par
+--bitmain-voltage <arg> Set bitmain voltage - S2/S3 only\par
+--bitmain-dev <arg> Set bitmain device - S2 only\par
+--bitmainbeeper     Set bitmain beeper ringing\par
+--bitmaintempoverctrl Set bitmain stop runing when temprerature is over 80 degree Celsius\par
+--bxf-bits <arg>    Set max BXF/HXF bits for overclocking (default: 54)\par
+--bxf-temp-target <arg> Set target temperature for BXF/HXF devices (default: 82)\par
+--bxm-bits <arg>    Set BXM bits for overclocking (default: 54)\par
+--btc-address <arg> Set bitcoin target address when solo mining to bitcoind\par
+--btc-sig <arg>     Set signature to add to coinbase when solo mining (optional)\par
+--compact           Use compact display without per device statistics\par
+--debug|-D          Enable debug output\par
+--disable-rejecting Automatically disable pools that continually reject shares\par
+--drillbit-options <arg> Set drillbit options <int|ext>:clock[:clock_divider][:voltage]\par
+--expiry|-E <arg>   Upper bound on how many seconds after getting work we consider a share from it stale (default: 120)\par
+--failover-only     Don't leak work to backup pools when primary pool is lagging\par
+--fix-protocol      Do not redirect to a different getwork protocol (eg. stratum)\par
+--hfa-hash-clock <arg> Set hashfast clock speed (default: 550)\par
+--hfa-fail-drop <arg> Set how many MHz to drop clockspeed each failure on an overlocked hashfast device (default: 10)\par
+--hfa-fan <arg>     Set fanspeed percentage for hashfast, single value or range (default: 10-85)\par
+--hfa-name <arg>    Set a unique name for a single hashfast device specified with --usb or the first device found\par
+--hfa-noshed        Disable hashfast dynamic core disabling feature\par
+--hfa-options <arg> Set hashfast options name:clock (comma separated)\par
+--hfa-temp-overheat <arg> Set the hashfast overheat throttling temperature (default: 95)\par
+--hfa-temp-target <arg> Set the hashfast target temperature (0 to disable) (default: 88)\par
+--hro-freq          Set the hashratio clock frequency (default: 280)\par
+--hotplug <arg>     Seconds between hotplug checks (0 means never check)\par
+--klondike-options <arg> Set klondike options clock:temptarget\par
+--load-balance      Change multipool strategy from failover to quota based balance\par
+--log|-l <arg>      Interval in seconds between log output (default: 5)\par
+--lowmem            Minimise caching of shares for low memory applications\par
+--minion-chipreport <arg> Seconds to report chip 5min hashrate, range 0-100 (default: 0=disabled)\par
+--minion-freq <arg> Set minion chip frequencies in MHz, single value or comma list, range 100-1400 (default: 1200)\par
+--minion-freqchange Millisecond total time to do frequency changes (default: 1000)\par
+--minion-freqpercent Percentage to use when starting up a chip (default: 70%)\par
+--minion-idlecount  Report when IdleCount is >0 or changes\par
+--minion-ledcount   Turn off led when more than this many chips below the ledlimit (default: 0)\par
+--minion-ledlimit   Turn off led when chips GHs are below this (default: 90)\par
+--minion-noautofreq Disable automatic frequency adjustment\par
+--minion-overheat   Enable directly halting any chip when the status exceeds 100C\par
+--minion-spidelay   Add a delay in microseconds after each SPI I/O\par
+--minion-spireset   SPI regular reset: iNNN for I/O count or sNNN for seconds - 0 means none\par
+--minion-spisleep   Sleep time in milliseconds when doing an SPI reset\par
+--minion-temp <arg> Set minion chip temperature threshold, single value or comma list, range 120-160 (default: 135C)\par
+--monitor|-m <arg>  Use custom pipe cmd for output messages\par
+--nfu-bits <arg>    Set nanofury bits for overclocking, range 32-63 (default: 50)\par
+--net-delay         Impose small delays in networking to not overload slow routers\par
+--no-submit-stale   Don't submit shares if they are detected as stale\par
+--osm-led-mode <arg> Set LED mode for OneStringMiner devices (default: 4)\par
+--pass|-p <arg>     Password for bitcoin JSON-RPC server\par
+--per-device-stats  Force verbose mode and output per-device statistics\par
+--protocol-dump|-P  Verbose dump of protocol-level activities\par
+--queue|-Q <arg>    Minimum number of work items to have queued (0+) (default: 1)\par
+--quiet|-q          Disable logging output, display status and errors\par
+--quota|-U <arg>    quota;URL combination for server with load-balance strategy quotas\par
+--real-quiet        Disable all output\par
+--rock-freq <arg>   Set RockMiner frequency in MHz, range 200-400 (default: 270)\par
+--rotate <arg>      Change multipool strategy from failover to regularly rotate at N minutes (default: 0)\par
+--round-robin       Change multipool strategy from failover to round robin on failure\par
+--scan-time|-s <arg> Upper bound on time spent scanning current work, in seconds (default: -1)\par
+--sched-start <arg> Set a time of day in HH:MM to start mining (a once off without a stop time)\par
+--sched-stop <arg>  Set a time of day in HH:MM to stop mining (will quit without a start time)\par
+--sharelog <arg>    Append share log to file\par
+--shares <arg>      Quit after mining N shares (default: unlimited)\par
+--socks-proxy <arg> Set socks4 proxy (host:port)\par
+--suggest-diff <arg> Suggest miner difficulty for pool to user (default: none)\par
+--syslog            Use system log for output messages (default: standard error)\par
+--temp-cutoff <arg> Temperature where a device will be automatically disabled, one value or comma separated list (default: 95)\par
+--text-only|-T      Disable ncurses formatted screen output\par
+--url|-o <arg>      URL for bitcoin JSON-RPC server\par
+--usb <arg>         USB device selection\par
+--user|-u <arg>     Username for bitcoin JSON-RPC server\par
+--userpass|-O <arg> Username:Password pair for bitcoin JSON-RPC server\par
+--verbose           Log verbose output to stderr as well as status output\par
+--widescreen        Use extra wide display without toggling\par
+--worktime          Display extra work time debug information\par
+Options for command line only:\par
+--config|-c <arg>   Load a JSON-format configuration file\par
+See example.conf for an example configuration.\par
+--default-config <arg> Specify the filename of the default config file\par
+Loaded at start and used when saving without a name.\par
+--help|-h           Print this message\par
+--ndevs|-n          Display all USB devices and exit\par
+--version|-V        Display version and exit\par
+\par
+\par
+Silent USB device (ASIC and FPGA) options:\par
+\par
+--icarus-options <arg> Set specific FPGA board configurations - one set of values for all or comma separated\par
+--icarus-timing <arg> Set how the Icarus timing is calculated - one setting/value for all or comma separated\par
+--usb-dump          (See FPGA-README)\par
+\par
+See FGPA-README or ASIC-README for more information regarding these.\par
+\par
+\par
+ASIC only options:\par
+\par
+--anu-freq <arg>    Set AntminerU1/2 frequency in MHz, range 125-500 (default: 250.0)\par
+--au3-freq <arg>    Set AntminerU3 frequency in MHz, range 100-250 (default: 225.0)\par
+--au3-volt <arg>    Set AntminerU3 voltage in mv, range 725-850, 0 to not set (default: 750)\par
+--avalon-auto       Adjust avalon overclock frequency dynamically for best hashrate\par
+--avalon-cutoff <arg> Set avalon overheat cut off temperature (default: 60)\par
+--avalon-fan <arg> Set fanspeed percentage for avalon, single value or range (default: 20-100)\par
+--avalon-freq <arg> Set frequency range for avalon-auto, single value or range\par
+--avalon-options <arg> Set avalon options baud:miners:asic:timeout:freq:tech\par
+--avalon-temp <arg> Set avalon target temperature (default: 50)\par
+--avalon2-freq      Set frequency range for Avalon2, single value or range\par
+--avalon2-voltage   Set Avalon2 core voltage, in millivolts\par
+--avalon2-fan       Set Avalon2 target fan speed\par
+--avalon2-cutoff <arg> Set Avalon2 overheat cut off temperature (default: 88)\par
+--avalon2-fixed-speed Set Avalon2 fan to fixed speed\par
+--avalon4-automatic-voltage Automatic adjust voltage base on module DH\par
+--avalon4-voltage   Set Avalon4 core voltage, in millivolts, step: 125\par
+--avalon4-freq      Set frequency for Avalon4, 1 to 3 values, example: 445:385:370\par
+--avalon4-fan       Set Avalon4 target fan speed range\par
+--avalon4-temp <arg> Set Avalon4 target temperature (default: 42)\par
+--avalon4-cutoff <arg> Set Avalon4 overheat cut off temperature (default: 65)\par
+--avalon4-polling-delay <arg> Set Avalon4 polling delay value (ms) (default: 20)\par
+--avalon4-ntime-offset <arg> Set Avalon4 MM ntime rolling max offset (default: 4)\par
+--avalon4-aucspeed <arg> Set Avalon4 AUC IIC bus speed (default: 400000)\par
+--avalon4-aucxdelay <arg> Set Avalon4 AUC IIC xfer read delay, 4800 ~= 1ms (default: 9600)\par
+--bab-options <arg> Set BaB options max:def:min:up:down:hz:delay:trf\par
+--bflsc-overheat <arg> Set overheat temperature where BFLSC devices throttle, 0 to disable (default: 90)\par
+--bitburner-fury-options <arg> Override avalon-options for BitBurner Fury boards baud:miners:asic:timeout:freq\par
+--bitburner-fury-voltage <arg> Set BitBurner Fury core voltage, in millivolts\par
+--bitburner-voltage <arg> Set BitBurner (Avalon) core voltage, in millivolts\par
+--bitmine-a1-options <ref_clk>:<sys_clk>:<spi_clk>:<max_chip>\par
+--bxf-temp-target <arg> Set target temperature for BXF devices (default: 82)\par
+--bxm-bits <arg>    Set BXM bits for overclocking (default: 50)\par
+--hfa-hash-clock <arg> Set hashfast clock speed (default: 550)\par
+--hfa-fail-drop <arg> Set how many MHz to drop clockspeed each failure on an overlocked hashfast device (default: 10)\par
+--hfa-fan <arg>     Set fanspeed percentage for hashfast, single value or range (default: 10-85)\par
+--hfa-name <arg>    Set a unique name for a single hashfast device specified with --usb or the first device found\par
+--hfa-noshed        Disable hashfast dynamic core disabling feature\par
+--hfa-temp-overheat <arg> Set the hashfast overheat throttling temperature (default: 95)\par
+--hfa-temp-target <arg> Set the hashfast target temperature (0 to disable) (default: 88)\par
+--hro-freq          Set the hashratio clock frequency (default: 280)\par
+--klondike-options <arg> Set klondike options clock:temptarget\par
+--rock-freq <arg>   Set RockMiner frequency in MHz, range 125-500 (default: 270)\par
+\par
+See ASIC-README for more information regarding these.\par
+\par
+\par
+FPGA only options:\par
+\par
+--bfl-range         Use nonce range on bitforce devices if supported\par
+\par
+See FGPA-README for more information regarding this.\par
+\par
+\par
+Cgminer should automatically find all of your Avalon ASIC, BFL ASIC, BitForce\par
+FPGAs, Icarus bitstream FPGAs, Klondike ASIC, ASICMINER usb block erupters,\par
+KnC ASICs, BaB ASICs, Hashfast ASICs, ModMiner FPGAs, BPMC/BGMC BF1 USB ASICs,\par
+Bi*fury USB ASICs, Onestring miner USB ASICs, Hexfury USB ASICs, Nanofury USB\par
+ASICs, Antminer U1/U2/U2+ U3 USB ASICs, Cointerra devices, BFx2 USB ASICs,\par
+Rockminer R-Box/RK-Box/T1 USB ASICs, Avalon2/3/4 USB ASICs and Hashratio USB\par
+ASICs.\par
+\par
+---\par
+\par
+SETTING UP USB DEVICES\par
+\par
+WINDOWS:\par
+\par
+On windows, the direct USB support requires the installation of a WinUSB\par
+driver (NOT the ftdi_sio driver), and attach it to the chosen USB device.\par
+When configuring your device, plug it in and wait for windows to attempt to\par
+install a driver on its own. It may think it has succeeded or failed but wait\par
+for it to finish regardless. This is NOT the driver you want installed. At this\par
+point you need to associate your device with the WinUSB driver. The easiest\par
+way to do this is to use the zadig utility which you must right click on and\par
+run as administrator. Then once you plug in your device you can choose the\par
+"list all devices" from the "option" menu and you should be able to see the\par
+device as something like: "BitFORCE SHA256 SC". Choose the install or replace\par
+driver option and select WinUSB. You can either google for zadig or download\par
+it from the cgminer directory in the DOWNLOADS link above.\par
+\par
+When you first switch a device over to WinUSB with zadig and it shows that\par
+correctly on the left of the zadig window, but it still gives permission\par
+errors, you may need to unplug the USB miner and then plug it back in. Some\par
+users may need to reboot at this point.\par
+\par
+\par
+LINUX:\par
+\par
+The short version:\par
+\par
+ sudo cp 01-cgminer.rules /etc/udev/rules.d/\par
+\par
+\par
+The long version:\par
+\par
+On linux, the direct USB support requires no drivers at all. However due to\par
+permissions issues, you may not be able to mine directly on the devices as a\par
+regular user without giving the user access to the device or by mining as\par
+root (administrator). In order to give your regular user access, you can make\par
+him a member of the plugdev group with the following commands:\par
+\par
+ sudo usermod -G plugdev -a `whoami`\par
+\par
+If your distribution does not have the plugdev group you can create it with:\par
+\par
+ sudo groupadd plugdev\par
+\par
+In order for the USB devices to instantly be owned by the plugdev group and\par
+accessible by anyone from the plugdev group you can copy the file\par
+"01-cgminer.rules" from the cgminer archive into the /etc/udev/rules.d\par
+directory with the following command:\par
+\par
+ sudo cp 01-cgminer.rules /etc/udev/rules.d/\par
+\par
+After this you can either manually restart udev and re-login, or more easily\par
+just reboot.\par
+\par
+\par
+OSX:\par
+\par
+On OSX, like Linux, no drivers need to be installed. However some devices\par
+like the bitfury USB sticks automatically load a driver thinking they're a\par
+modem and the driver needs to be unloaded for cgminer to work:\par
+\par
+ sudo kextunload -b com.apple.driver.AppleUSBCDC\par
+ sudo kextunload -b com.apple.driver.AppleUSBCDCACMData\par
+\par
+There may be a limit to the number of USB devices that you are allowed to start.\par
+The following set of commands, followed by a reboot will increase that:\par
+\par
+ sudo su\par
+ touch /etc/sysctl.conf\par
+ echo kern.sysv.semume=100 >> /etc/sysctl.conf\par
+ chown root:wheel /etc/sysctl.conf\par
+ chmod 0644 /etc/sysctl.conf\par
+\par
+Some devices need superuser access to mine on them so cgminer may need to\par
+be started with sudo\par
+i.e.:\par
+ sudo cgminer <insert commands here>\par
+\par
+\par
+---\par
+\par
+Advanced USB options:\par
+\par
+The --usb option can restrict how many USB devices are found:\par
+\par
+  --usb 1:2,1:3,1:4,1:*\par
+or\par
+  --usb BAS:1,BFL:1,MMQ:0,ICA:0,KLN:0\par
+or\par
+  --usb :10\par
+\par
+You can only use one of the above 3\par
+\par
+The first version\par
+  --usb 1:2,1:3,1:4,1:*\par
+allows you to select which devices to mine on with a list of USB\par
+ bus_number:device_address\par
+All other USB devices will be ignored\par
+Hotplug will also only look at the devices matching the list specified and\par
+find nothing new if they are all in use\par
+You can specify just the USB bus_number to find all devices like 1:*\par
+which means any devices on USB bus_number 1\par
+This is useful if you unplug a device then plug it back in the same port,\par
+it usually reappears with the same bus_number but a different device_address\par
+\par
+You can see the list of all USB devices on linux with 'sudo lsusb'\par
+Cgminer will list the recognised USB devices\par
+\par
+with the '-n' option or the\par
+'--usb-dump 0' option\par
+The '--usb-dump N' option with a value of N greater than 0 will dump a lot\par
+of details about each recognised USB device\par
+If you wish to see all USB devices, include the --usb-list-all option\par
+\par
+The second version\par
+  --usb BAS:1,BFL:1,MMQ:0,ICA:0,KLN:0\par
+allows you to specify how many devices to choose based on each device\par
+driver cgminer has - the current USB drivers are:\par
+AVA, BAS, BFL, BF1, DRB, HFA, ICA, KLN and MMQ.\par
+\par
+N.B. you can only specify which device driver to limit, not the type of\par
+each device, e.g. with BAS:n you can limit how many BFL ASIC devices will\par
+be checked, but you cannot limit the number of each type of BFL ASIC\par
+\par
+Also note that the MMQ count is the number of MMQ backplanes you have\par
+not the number of MMQ FPGAs\par
+\par
+The third version\par
+  --usb :10\par
+means only use a maximum of 10 devices of any supported USB devices\par
+Once cgminer has 10 devices it will not configure any more and hotplug will\par
+not scan for any more\par
+If one of the 10 devices stops working, hotplug - if enabled, as is default\par
+- will scan normally again until it has 10 devices\par
+\par
+  --usb :0 will disable all USB I/O other than to initialise libusb\par
+\par
+---\par
+\par
+WHILE RUNNING:\par
+\par
+The following options are available while running with a single keypress:\par
+\par
+ [U]SB management [P]ool management [S]ettings [D]isplay options [Q]uit\par
+\par
+\par
+U gives you:\par
+\par
+[S]ummary of device information\par
+[E]nable device\par
+[D]isable device\par
+[U]nplug to allow hotplug restart\par
+[R]eset device USB\par
+[L]ist all known devices\par
+[B]lacklist current device from current instance of cgminer\par
+[W]hitelist previously blacklisted device\par
+[H]otplug interval (0 to disable)\par
+\par
+\par
+P gives you:\par
+\par
+Current pool management strategy: Failover\par
+[F]ailover only disabled\par
+[A]dd pool [R]emove pool [D]isable pool [E]nable pool\par
+[C]hange management strategy [S]witch pool [I]nformation\par
+\par
+\par
+S gives you:\par
+\par
+[Q]ueue: 1\par
+[S]cantime: 60\par
+[E]xpiry: 120\par
+[W]rite config file\par
+[C]gminer restart\par
+\par
+\par
+D gives you:\par
+\par
+[N]ormal [C]lear [S]ilent mode (disable all output)\par
+[D]ebug:off\par
+[P]er-device:off\par
+[Q]uiet:off\par
+[V]erbose:off\par
+[R]PC debug:off\par
+[W]orkTime details:off\par
+co[M]pact: off\par
+[T]oggle status switching:enabled\par
+[Z]ero statistics\par
+[L]og interval:5\par
+\par
+\par
+Q quits the application.\par
+\par
+\par
+The running log shows output like this:\par
+\par
+ [2013-11-09 11:04:41] Accepted 01b3bde7 Diff 150/128 AVA 1 pool 0\par
+ [2013-11-09 11:04:49] Accepted 015df995 Diff 187/128 AVA 1 pool 0\par
+ [2013-11-09 11:04:50] Accepted 01163b68 Diff 236/128 AVA 1 pool 0\par
+ [2013-11-09 11:04:53] Accepted 9f745840 Diff 411/128 BAS 1 pool 0\par
+\par
+The 8 byte hex value are the 1st nonzero bytes of the share being submitted to\par
+the pool. The 2 diff values are the actual difficulty target that share reached\par
+followed by the difficulty target the pool is currently asking for.\par
+\par
+---\par
+Also many issues and FAQs are covered in the forum thread\par
+dedicated to this program,\par
+\tab {{\field{\*\fldinst{HYPERLINK http://forum.bitcoin.org/index.php?topic=28402.0 }}{\fldrslt{http://forum.bitcoin.org/index.php?topic=28402.0\ul0\cf0}}}}\f0\fs22\par
+\par
+DISPLAY:\par
+\par
+The display is roughly split into two portions, the top status window and the\par
+bottom scrolling log window.\par
+\par
+\par
+STATUS WINDOW\par
+The status window is split into overall status and per device status.\par
+\par
+Overall status:\par
+\par
+The output line shows the following:\par
+ (5s):2.469T (1m):2.677T (5m):2.040T (15m):1.014T (avg):2.733Th/s\par
+\par
+These are exponentially decaying average hashrates over 5s/1m/5m/15m and an\par
+average since the start.\par
+\par
+Followed by:\par
+ A:290391  R:5101  HW:145  WU:37610.4/m\par
+\par
+Each column is as follows:\par
+A:  The total difficulty of Accepted shares\par
+R:  The total difficulty of Rejected shares\par
+HW:  The number of HardWare errors\par
+WU:  The Work Utility defined as the number of diff1 shares work / minute\par
+     (accepted or rejected).\par
+\par
+alternating with:\par
+ ST: 22  SS: 0  NB: 2  LW: 356090  GF: 0  RF: 0\par
+\par
+ST is STaged work items (ready to use).\par
+SS is Stale Shares discarded (detected and not submitted so don't count as rejects)\par
+NB is New Blocks detected on the network\par
+LW is Locally generated Work items\par
+GF is Getwork Fail Occasions (server slow to provide work)\par
+RF is Remote Fail occasions (server slow to accept work)\par
+\par
+Followed by:\par
+ Connected to pool.com diff 3.45K with stratum as user me\par
+\par
+The diff shown is the current vardiff requested by the pool currently being\par
+mined at.\par
+\par
+Followed by:\par
+Block: ca0d237f...  Diff:5.01G  Started: [00:14:27]  Best share: 1.18M\par
+\par
+This shows a short stretch about the current block, when the new block started,\par
+and the all time best difficulty share you've found since starting cgminer\par
+this time.\par
+\par
+Per device status:\par
+\par
+ 6: HFS Random  : 645MHz  85C  13% 0.79V  | 2.152T / 1.351Th/s\par
+\par
+Each column is as follows:\par
+Temperature (if supported)\par
+Fanspeed (if supported)\par
+Voltage (if supported)\par
+\par
+A 5 second exponentially decaying average hash rate\par
+An all time average hash rate\par
+\par
+alternating with\par
+\par
+ 6: HFS Random  : 645MHz  86C  13% 0.80V  | A:290348 R:1067 HW:88 WU:18901.8/m\par
+\par
+The total difficulty of accepted shares\par
+The total difficulty of rejected shares\par
+The number of hardware erorrs\par
+The work utility defined as the number of diff1 shares work / minute\par
+\par
+\par
+LOG WINDOW\par
+\par
+All running information is shown here, usually share submission results and\par
+block update notifications, along with device messages and warnings.\par
+\par
+ [2014-03-29 00:24:09] Accepted 1397768d Diff 3.35K/2727 HFS 0 pool 0\par
+ [2014-03-29 00:24:13] Stratum from pool 0 detected new block\par
+\par
+\par
+---\par
+MULTIPOOL\par
+\par
+FAILOVER STRATEGIES WITH MULTIPOOL:\par
+A number of different strategies for dealing with multipool setups are\par
+available. Each has their advantages and disadvantages so multiple strategies\par
+are available by user choice, as per the following list:\par
+\par
+FAILOVER:\par
+The default strategy is failover. This means that if you input a number of\par
+pools, it will try to use them as a priority list, moving away from the 1st\par
+to the 2nd, 2nd to 3rd and so on. If any of the earlier pools recover, it will\par
+move back to the higher priority ones.\par
+\par
+ROUND ROBIN:\par
+This strategy only moves from one pool to the next when the current one falls\par
+idle and makes no attempt to move otherwise.\par
+\par
+ROTATE:\par
+This strategy moves at user-defined intervals from one active pool to the next,\par
+skipping pools that are idle.\par
+\par
+LOAD BALANCE:\par
+This strategy sends work to all the pools on a quota basis. By default, all\par
+pools are allocated equal quotas unless specified with --quota. This\par
+apportioning of work is based on work handed out, not shares returned so is\par
+independent of difficulty targets or rejected shares. While a pool is disabled\par
+or dead, its quota is dropped until it is re-enabled. Quotas are forward\par
+looking, so if the quota is changed on the fly, it only affects future work.\par
+If all pools are set to zero quota or all pools with quota are dead, it will\par
+fall back to a failover mode. See quota below for more information.\par
+\par
+The failover-only flag has special meaning in combination with load-balance\par
+mode and it will distribute quota back to priority pool 0 from any pools that\par
+are unable to provide work for any reason so as to maintain quota ratios\par
+between the rest of the pools.\par
+\par
+BALANCE:\par
+This strategy monitors the amount of difficulty 1 shares solved for each pool\par
+and uses it to try to end up doing the same amount of work for all pools.\par
+\par
+\par
+---\par
+QUOTAS\par
+\par
+The load-balance multipool strategy works off a quota based scheduler. The\par
+quotas handed out by default are equal, but the user is allowed to specify any\par
+arbitrary ratio of quotas. For example, if all the quota values add up to 100,\par
+each quota value will be a percentage, but if 2 pools are specified and pool0\par
+is given a quota of 1 and pool1 is given a quota of 9, pool0 will get 10% of\par
+the work and pool1 will get 90%. Quotas can be changed on the fly by the API,\par
+and do not act retrospectively. Setting a quota to zero will effectively\par
+disable that pool unless all other pools are disabled or dead. In that\par
+scenario, load-balance falls back to regular failover priority-based strategy.\par
+While a pool is dead, it loses its quota and no attempt is made to catch up\par
+when it comes back to life.\par
+\par
+To specify quotas on the command line, pools should be specified with a\par
+semicolon separated --quota(or -U) entry instead of --url. Pools specified with\par
+--url are given a nominal quota value of 1 and entries can be mixed.\par
+\par
+For example:\par
+--url poola:porta -u usernamea -p passa --quota "2;poolb:portb" -u usernameb -p passb\par
+Will give poola 1/3 of the work and poolb 2/3 of the work.\par
+\par
+Writing configuration files with quotas is likewise supported. To use the above\par
+quotas in a configuration file they would be specified thus:\par
+\par
+"pools" : [\par
+        \{\par
+                "url" : "poola:porta",\par
+                "user" : "usernamea",\par
+                "pass" : "passa"\par
+        \},\par
+        \{\par
+                "quota" : "2;poolb:portb",\par
+                "user" : "usernameb",\par
+                "pass" : "passb"\par
+        \}\par
+]\par
+\par
+\par
+---\par
+SOLO MINING\par
+\par
+Solo mining can be done efficiently as a single pool entry or a backup to\par
+any other pooled mining and it is recommended everyone have solo mining set up\par
+as their final backup in case all their other pools are DDoSed/down for the\par
+security of the network. To enable solo mining, one must be running a local\par
+bitcoind/bitcoin-qt or have one they have rpc access to. To do this, edit your\par
+bitcoind configuration file (bitcoin.conf) with the following extra lines,\par
+using your choice of username and password:\par
+\par
+rpcuser=username\par
+rpcpassword=password\par
+\par
+Restart bitcoind, then start cgminer, pointing to the bitcoind and choose a\par
+btc address with the following options, altering to suit their setup:\par
+\par
+cgminer -o {{\field{\*\fldinst{HYPERLINK http://localhost:8332 }}{\fldrslt{http://localhost:8332\ul0\cf0}}}}\f0\fs22  -u username -p password --btc-address 15qSxP1SQcUX3o4nhkfdbgyoWEFMomJ4rZ\par
+\par
+Note the {{\field{\*\fldinst{HYPERLINK http:// }}{\fldrslt{http://\ul0\cf0}}}}\f0\fs22  is mandatory for solo mining.\par
+\par
+---\par
+LOGGING\par
+\par
+cgminer will log to stderr if it detects stderr is being redirected to a file.\par
+To enable logging simply add 2>logfile.txt to your command line and logfile.txt\par
+will contain the logged output at the log level you specify (normal, verbose,\par
+debug etc.)\par
+\par
+In other words if you would normally use:\par
+./cgminer -o xxx -u yyy -p zzz\par
+if you use\par
+./cgminer -o xxx -u yyy -p zzz 2>logfile.txt\par
+it will log to a file called logfile.txt and otherwise work the same.\par
+\par
+There is also the -m option on linux which will spawn a command of your choice\par
+and pipe the output directly to that command.\par
+\par
+The WorkTime details 'debug' option adds details on the end of each line\par
+displayed for Accepted or Rejected work done. An example would be:\par
+\par
+ <-00000059.ed4834a3 M:X D:1.0 G:17:02:38:0.405 C:1.855 (2.995) W:3.440 (0.000) S:0.461 R:17:02:47\par
+\par
+The first 2 hex codes are the previous block hash, the rest are reported in\par
+seconds unless stated otherwise:\par
+The previous hash is followed by the getwork mode used M:X where X is one of\par
+P:Pool, T:Test Pool, L:LP or B:Benchmark,\par
+then D:d.ddd is the difficulty required to get a share from the work,\par
+then G:hh:mm:ss:n.nnn, which is when the getwork or LP was sent to the pool and\par
+the n.nnn is how long it took to reply,\par
+followed by 'O' on it's own if it is an original getwork, or 'C:n.nnn' if it was\par
+a clone with n.nnn stating how long after the work was recieved that it was cloned,\par
+(m.mmm) is how long from when the original work was received until work started,\par
+W:n.nnn is how long the work took to process until it was ready to submit,\par
+(m.mmm) is how long from ready to submit to actually doing the submit, this is\par
+usually 0.000 unless there was a problem with submitting the work,\par
+S:n.nnn is how long it took to submit the completed work and await the reply,\par
+R:hh:mm:ss is the actual time the work submit reply was received\par
+\par
+If you start cgminer with the --sharelog option, you can get detailed\par
+information for each share found. The argument to the option may be "-" for\par
+standard output (not advisable with the ncurses UI), any valid positive number\par
+for that file descriptor, or a filename.\par
+\par
+To log share data to a file named "share.log", you can use either:\par
+./cgminer --sharelog 50 -o xxx -u yyy -p zzz 50>share.log\par
+./cgminer --sharelog share.log -o xxx -u yyy -p zzz\par
+\par
+For every share found, data will be logged in a CSV (Comma Separated Value)\par
+format:\par
+    timestamp,disposition,target,pool,dev,thr,sharehash,sharedata\par
+For example (this is wrapped, but it's all on one line for real):\par
+    1335313090,reject,\par
+    ffffffffffffffffffffffffffffffffffffffffffffffffffffffff00000000,\par
+    {{\field{\*\fldinst{HYPERLINK http://localhost:8337,ASC0,0 }}{\fldrslt{http://localhost:8337,ASC0,0\ul0\cf0}}}}\f0\fs22 ,\par
+    6f983c918f3299b58febf95ec4d0c7094ed634bc13754553ec34fc3800000000,\par
+    00000001a0980aff4ce4a96d53f4b89a2d5f0e765c978640fe24372a000001c5\par
+    000000004a4366808f81d44f26df3d69d7dc4b3473385930462d9ab707b50498\par
+    f681634a4f1f63d01a0cd43fb338000000000080000000000000000000000000\par
+    0000000000000000000000000000000000000000000000000000000080020000\par
+\par
+---\par
+\par
+BENCHMARK\par
+\par
+The --benchmark option hashes a single fixed work item over and over and does\par
+not submit shares to any pools.\par
+\par
+The --benchfile <arg> option hashes the work given in the file <arg> supplied.\par
+The format of the work file is:\par
+version,merkleroot,prevhash,diffbits,noncetime\par
+Any empty line or any line starting with '#' or '/' is ignored.\par
+When it reaches the end of the file it continues back at the top.\par
+\par
+The format of the data items matches the byte ordering and format of the\par
+the bitcoind getblock RPC output.\par
+\par
+An example file containing bitcoin block #1 would be:\par
+\par
+# Block 1\par
+1,0e3e2357e806b6cdb1f70b54c3a3a17b6714ee1f0e68bebb44a74b1efd512098,00000000001\par
+9d6689c085ae165831e934ff763ae46a2a6c172b3f1b60a8ce26f,1d00ffff,1231469665\par
+\par
+However, the work data should be one line without the linebreak in the middle\par
+\par
+If you use --benchfile <arg>, then --benchfile-display will output a log line,\par
+for each nonce found, showing the nonce value in decimal and hex and the work\par
+used to find it in hex.\par
+\par
+---\par
+\par
+RPC API\par
+\par
+For RPC API details see the API-README file\par
+\par
+---\par
+\par
+FAQ\par
+\par
+Q: Help, I've started cgminer and everything reads zero!?\par
+A: Welcome to bitcoin mining. Your computer by itself cannot mine bitcoin no\par
+matter how powerful it is. You have to purchase dedicated mining hardware\par
+called ASICs to plug into your computer. See Q regarding ASICs below.\par
+\par
+Q: I have multiple USB stick devices but I can't get them all to work at once?\par
+A: Very few USB hubs deliver the promised power required to run as many devices\par
+as they fit if all of them draw power from USB.\par
+\par
+Q: I've plugged my devices into my USB hub but nothing shows up?\par
+A: RPis and Windows have incomplete or non-standard USB3 support so they may\par
+never work. It may be possible to get a USB3 hub to work by plugging it into\par
+a USB2 hub. When choosing a hub, USB2 hubs are preferable whenever possible\par
+due to better support all round.\par
+\par
+Q: Can I mine on servers from different networks (eg xxxcoin and bitcoin) at\par
+the same time?\par
+A: No, cgminer keeps a database of the block it's working on to ensure it does\par
+not work on stale blocks, and having different blocks from two networks would\par
+make it invalidate the work from each other.\par
+\par
+Q: Can I configure cgminer to mine with different login credentials or pools\par
+for each separate device?\par
+A: No.\par
+\par
+Q: Can I put multiple pools in the config file?\par
+A: Yes, check the example.conf file. Alternatively, set up everything either on\par
+the command line or via the menu after startup and choose settings->write\par
+config file and the file will be loaded one each startup.\par
+\par
+Q: The build fails with gcc is unable to build a binary.\par
+A: Remove the "-march=native" component of your CFLAGS as your version of gcc\par
+does not support it. Also -O2 is capital o 2, not zero 2.\par
+\par
+Q: Can you implement feature X?\par
+A: I can, but time is limited, and people who donate are more likely to get\par
+their feature requests implemented.\par
+\par
+Q: Work keeps going to my backup pool even though my primary pool hasn't\par
+failed?\par
+A: Cgminer checks for conditions where the primary pool is lagging and will\par
+pass some work to the backup servers under those conditions. The reason for\par
+doing this is to try its absolute best to keep the devices working on something\par
+useful and not risk idle periods. You can disable this behaviour with the\par
+option --failover-only.\par
+\par
+Q: Is this a virus?\par
+A: Cgminer is being packaged with other trojan scripts and some antivirus\par
+software is falsely accusing cgminer.exe as being the actual virus, rather\par
+than whatever it is being packaged with. If you installed cgminer yourself,\par
+then you do not have a virus on your computer. Complain to your antivirus\par
+software company. They seem to be flagging even source code now from cgminer\par
+as viruses, even though text source files can't do anything by themself.\par
+\par
+Q: Can you modify the display to include more of one thing in the output and\par
+less of another, or can you change the quiet mode or can you add yet another\par
+output mode?\par
+A: Everyone will always have their own view of what's important to monitor.\par
+The defaults are very sane and I have very little interest in changing this\par
+any further. There is far more detail in the API output than can be reasonably\par
+displayed on the small console window, and using an external interface such\par
+as miner.php is much more useful for setups with many devices.\par
+\par
+Q: What are the best parameters to pass for X pool/hardware/device.\par
+A: Virtually always, the DEFAULT parameters give the best results. Most user\par
+defined settings lead to worse performance.\par
+\par
+Q: What happened to CPU and GPU mining?\par
+A: Their efficiency makes them irrelevant in the bitcoin mining world today\par
+and the author has no interest in supporting alternative coins that are better\par
+mined by these devices.\par
+\par
+Q: GUI version?\par
+A: No. The RPC interface makes it possible for someone else to write one\par
+though.\par
+\par
+Q: I'm having an issue. What debugging information should I provide?\par
+A: Start cgminer with your regular commands and add -D -T --verbose and provide\par
+the full startup output and a summary of your hardware and operating system.\par
+\par
+Q: Why don't you provide win64 builds?\par
+A: Win32 builds work everywhere and there is precisely zero advantage to a\par
+64 bit build on windows.\par
+\par
+Q: Is it faster to mine on windows or linux?\par
+A: It makes no difference in terms of performance. It comes down to choice of\par
+operating system for their various features and your comfort level. However\par
+linux is the primary development platform and is virtually guaranteed to be\par
+more stable.\par
+\par
+Q: My network gets slower and slower and then dies for a minute?\par
+A; Try the --net-delay option if you are on a getwork or GBT server. This does\par
+nothing with stratum mining.\par
+\par
+Q: How do I tune for p2pool?\par
+A: It is also recommended to use --failover-only since the work is effectively\par
+like a different block chain, and not enabling --no-submit-stale. If mining with\par
+a BFL (fpga) minirig, it is worth adding the --bfl-range option.\par
+\par
+Q: I run PHP on windows to access the API with the example miner.php. Why does\par
+it fail when php is installed properly but I only get errors about Sockets not\par
+working in the logs?\par
+A: {{\field{\*\fldinst{HYPERLINK http://us.php.net/manual/en/sockets.installation.php }}{\fldrslt{http://us.php.net/manual/en/sockets.installation.php\ul0\cf0}}}}\f0\fs22\par
+\par
+Q: What is a PGA?\par
+A: Cgminer supports 3 FPGAs: BitForce, Icarus and ModMiner.\par
+They are Field-Programmable Gate Arrays that have been programmed to do Bitcoin\par
+mining. Since the acronym needs to be only 3 characters, the "Field-" part has\par
+been skipped.\par
+\par
+Q: What is an ASIC?\par
+A: They are Application Specify Integrated Circuit devices and provide the\par
+highest performance per unit power due to being dedicated to only one purpose.\par
+They are the only meaningful way to mine bitcoin today.\par
+\par
+Q: What is stratum and how do I use it?\par
+A: Stratum is a protocol designed for pooled mining in such a way as to\par
+minimise the amount of network communications, yet scale to hardware of any\par
+speed. With versions of cgminer 2.8.0+, if a pool has stratum support, cgminer\par
+will automatically detect it and switch to the support as advertised if it can.\par
+If you input the stratum port directly into your configuration, or use the\par
+special prefix "stratum+tcp://" instead of "{{\field{\*\fldinst{HYPERLINK http:// }}{\fldrslt{http://\ul0\cf0}}}}\f0\fs22 ", cgminer will ONLY try to\par
+use stratum protocol mining. The advantages of stratum to the miner are no\par
+delays in getting more work for the miner, less rejects across block changes,\par
+and far less network communications for the same amount of mining hashrate. If\par
+you do NOT wish cgminer to automatically switch to stratum protocol even if it\par
+is detected, add the --fix-protocol option.\par
+\par
+Q: Why don't the statistics add up: Accepted, Rejected, Stale, Hardware Errors,\par
+Diff1 Work, etc. when mining greater than 1 difficulty shares?\par
+A: As an example, if you look at 'Difficulty Accepted' in the RPC API, the number\par
+of difficulty shares accepted does not usually exactly equal the amount of work\par
+done to find them. If you are mining at 8 difficulty, then you would expect on\par
+average to find one 8 difficulty share, per 8 single difficulty shares found.\par
+However, the number is actually random and converges over time, it is an average,\par
+not an exact value, thus you may find more or less than the expected average.\par
+\par
+Q: My keyboard input momentarily pauses or repeats keys every so often on\par
+windows while mining?\par
+A: The USB implementation on windows can be very flaky on some hardware and\par
+every time cgminer looks for new hardware to hotplug it it can cause these\par
+sorts of problems. You can disable hotplug with:\par
+--hotplug 0\par
+\par
+Q: What should my Work Utility (WU) be?\par
+A: Work utility is the product of hashrate * luck and only stabilises over a\par
+very long period of time. Assuming all your work is valid work, bitcoin mining\par
+should produce a work utility of approximately 1 per 71.6MH. This means at\par
+5GH you should have a WU of 5000 / 71.6 or ~ 69. You cannot make your machine\par
+do "better WU" than this - it is luck related. However you can make it much\par
+worse if your machine produces a lot of hardware errors producing invalid work.\par
+\par
+Q: What should I build in for a generic distribution binary?\par
+A: There are a number of drivers that expect to be used on dedicated standalone\par
+hardware. That said, the drivers that are designed to work generically with\par
+USB on any hardware are the following:\par
+\par
+--enable-avalon\par
+--enable-avalon2\par
+--enable-avalon4\par
+--enable-bflsc\par
+--enable-bitfury\par
+--enable-cointerra\par
+--enable-drillbit\par
+--enable-hashfast\par
+--enable-hashratio\par
+--enable-icarus\par
+--enable-klondike\par
+\par
+---\par
+\par
+This code is provided entirely free of charge by the programmer in his spare\par
+time so donations would be greatly appreciated. Please consider donating to the\par
+address below.\par
+}
+ 
