@@ -6,12 +6,18 @@ AQUI TE A VERSÃO EM INGLÊS PARA AJUDAR A VOCÊ ENTENDER MELHOR
 OBRIGADO BONS LUCROS
 Este código é fornecido de forma totalmente gratuita pelo programador em
 Tempo para que as doações sejam muito apreciadas. Por favor considere doar para o
+
 Endereço abaixo.
 gytta.marilove@gmail.com
+
 btc  1Bh1iY7MNZfeF8cp8UNf39jzueJ2bFE3Xo
+
 dash   XxDxiUdLqyFnPWn33LY5wcvRYnLJY5JP5o
+
 ether  0x1580f077a5eA5C72236eB38E2319702bB05FD189
+
 golem GNT  0x1580f077a5eA5C72236eB38E2319702bB05FD189
+
 LTC    LQwcCEZSB7HRSJQcTrwVUzXVdpawJMwfkM
 
 SE PODER NOS AJUDE  GRATIDÃO
